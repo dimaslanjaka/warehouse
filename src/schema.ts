@@ -1,10 +1,10 @@
+import Promise from 'bluebird';
+import { isPlainObject } from 'is-plain-object';
+import PopulationError from './error/population';
 import SchemaType from './schematype';
 import * as Types from './types/index';
-import Promise from 'bluebird';
-import { getProp, setProp, delProp } from './util';
-import PopulationError from './error/population';
 import SchemaTypeVirtual from './types/virtual';
-import { isPlainObject } from 'is-plain-object';
+import { delProp, getProp, setProp } from './util';
 
 /**
  * @callback queryFilterCallback
@@ -380,8 +380,8 @@ class QueryParser {
   }
 }
 
-class Schema {
-  paths: Record<string, SchemaType<any>> = {};
+class Schema<T> {
+  paths: Record<string, SchemaType<T>> = {};
   statics: Record<string, any> = {};
   methods: Record<string, any> = {};
   hooks;
@@ -443,9 +443,9 @@ class Schema {
    * @param {*} obj
    * @return {SchemaType | undefined}
    */
-  path(name: string): SchemaType<any>;
+  path(name: string): SchemaType<T>;
   path(name: string, obj: SchemaType<unknown> | ((...args: any[]) => any) | { type: any; } | Record<string, unknown> | any[]): void;
-  path(name: string, obj?: SchemaType<unknown> | ((...args: any[]) => any) | { type: any; } | Record<string, unknown> | any[]): SchemaType<any> | void {
+  path(name: string, obj?: SchemaType<unknown> | ((...args: any[]) => any) | { type: any; } | Record<string, unknown> | any[]): SchemaType<T> | void {
     if (obj == null) {
       return this.paths[name];
     }

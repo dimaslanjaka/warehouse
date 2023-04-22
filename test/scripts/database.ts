@@ -1,11 +1,11 @@
-import chai from 'chai';
-const should = chai.should(); // eslint-disable-line
-import path from 'path';
 import Promise from 'bluebird';
+import chai from 'chai';
+import fs from 'fs';
+import path from 'path';
 import sinon from 'sinon';
 import Database from '../../dist/database';
 import Model from '../../dist/model';
-import fs from 'fs';
+const should = chai.should(); // eslint-disable-line
 const promisifyFs = Promise.promisifyAll(fs);
 
 const DB_PATH = path.join(path.dirname(__dirname), 'fixtures', 'db.json');

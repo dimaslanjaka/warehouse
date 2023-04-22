@@ -1,15 +1,15 @@
+import Promise from 'bluebird';
 import { EventEmitter } from 'events';
 import rfdc from 'rfdc';
-const cloneDeep = rfdc();
-import Promise from 'bluebird';
-import { parseArgs, getProp, setGetter, shuffle } from './util';
 import Document from './document';
-import Query from './query';
-import Schema from './schema';
-import * as Types from './types/index';
 import WarehouseError from './error';
 import PopulationError from './error/population';
 import Mutex from './mutex';
+import Query from './query';
+import Schema from './schema';
+import * as Types from './types/index';
+import { getProp, parseArgs, setGetter, shuffle } from './util';
+const cloneDeep = rfdc();
 
 class Model extends EventEmitter {
   _mutex = new Mutex();
@@ -49,7 +49,7 @@ class Model extends EventEmitter {
 
     class _Document extends Document {
       _model!: Model;
-      _schema!: Schema;
+      _schema!: Schema<_Document>;
       constructor(data) {
         super(data);
 
@@ -65,7 +65,7 @@ class Model extends EventEmitter {
 
     class _Query extends Query {
       _model!: Model;
-      _schema!: Schema;
+      _schema!: Schema<_Query>;
     }
 
     this.Query = _Query;
