@@ -1,7 +1,15 @@
 .DS_Store
-node_modules/
+**/node_modules/
+**/.yarn/cache
+**/.yarn/versions
+**/.yarn/unplug*
+**/.yarn/*.gz
+**/tmp/
 .idea/
 *.log
 docs/
 coverage/
 dist
+**/yarn.lock
+**/package-lock.json
+**/.vscode
