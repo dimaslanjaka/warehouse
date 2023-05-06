@@ -20,10 +20,10 @@ abstract class Document {
   /**
    * Saves the document.
    *
-   * @param {function} [callback]
-   * @return {Promise}
+   * @param callback
+   * @return
    */
-  save(callback) {
+  save(callback?: (...args:any[])=>any): Promise<any> {
     return this._model.save(this, callback);
   }
 
