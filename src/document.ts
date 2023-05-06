@@ -99,7 +99,7 @@ abstract class Document {
   }
 }
 
-function isGetter(obj, key) {
+function isGetter(obj: any, key: PropertyKey) {
   return Object.getOwnPropertyDescriptor(obj, key).get;
 }
 
