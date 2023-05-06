@@ -42,7 +42,7 @@ class Model extends EventEmitter {
 
     // Set `_id` path for schema
     if (!schema.path('_id')) {
-      schema.path('_id', {type: Types.CUID, required: true});
+      schema.path('_id', { type: Types.CUID, required: true });
     }
 
     this.schema = schema;
@@ -50,7 +50,7 @@ class Model extends EventEmitter {
     class _Document extends Document {
       _model!: Model;
       _schema!: Schema;
-      constructor(data) {
+      constructor(data: Record<string, any>) {
         super(data);
 
         // Apply getters
@@ -102,9 +102,12 @@ class Model extends EventEmitter {
     const raw = this.data[id];
     if (!raw) return;
 
-    const options = Object.assign({
-      lean: false
-    }, options_);
+    const options = Object.assign(
+      {
+        lean: false
+      },
+      options_
+    );
 
     const data = cloneDeep(raw);
     return options.lean ? data : this.new(data);
@@ -456,7 +459,7 @@ class Model extends EventEmitter {
    *   @param {Boolean} [options.lean=false] Returns a plain JavaScript object.
    * @return {Query|Array}
    */
-  find(query, options: { limit?: number; skip?: number; lean?: boolean; } = {}) {
+  find(query, options: { limit?: number; skip?: number; lean?: boolean } = {}) {
     const filter = this.schema._execQuery(query);
     const keys = Object.keys(this.data);
     const len = keys.length;
@@ -491,7 +494,7 @@ class Model extends EventEmitter {
    *   @param {Boolean} [options.lean=false] Returns a plain JavaScript object.
    * @return {Document|Object}
    */
-  findOne(query, options_ : { skip?: number; lean?: boolean; } = {}) {
+  findOne(query, options_: { skip?: number; lean?: boolean } = {}) {
     const options = Object.assign(options_, { limit: 1 });
 
     const result = this.find(query, options);
