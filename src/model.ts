@@ -23,13 +23,13 @@ class Model extends EventEmitter {
   /**
    * Model constructor.
    *
-   * @param {string} name Model name
-   * @param {Schema|object} [schema] Schema
+   * @param name Model name
+   * @param schema Schema
    */
-  constructor(public name: string, schema_) {
+  constructor(public name: string, schema_: Schema | Record<string, any>) {
     super();
 
-    let schema;
+    let schema: Schema;
 
     // Define schema
     if (schema_ instanceof Schema) {
@@ -83,22 +83,29 @@ class Model extends EventEmitter {
   /**
    * Creates a new document.
    *
-   * @param {object} data
-   * @return {Document}
+   * @param data
+   * @return
    */
-  new(data) {
+  new(data: Record<string, any>): Document {
     return new this.Document(data);
   }
 
   /**
    * Finds a document by its identifier.
    *
-   * @param {*} id
-   * @param {object} options
-   *   @param {boolean} [options.lean=false] Returns a plain JavaScript object
-   * @return {Document|object}
+   * @param id
+   * @param options
+   *   @param {boolean} [options.lean=false] false = Returns a plain JavaScript object
+   * @return
    */
-  findById(id, options_?) {
+  findById(
+    id: string,
+    options_?: {
+      limit?: number;
+      skip?: number;
+      lean?: boolean;
+    }
+  ): Document | Record<string, any> {
     const raw = this.data[id];
     if (!raw) return;
 
@@ -116,17 +123,17 @@ class Model extends EventEmitter {
   /**
    * Checks if the model contains a document with the specified id.
    *
-   * @param {*} id
-   * @return {boolean}
+   * @param id
+   * @return
    */
-  has(id) {
+  has(id: any): boolean {
     return Boolean(this.data[id]);
   }
 
   /**
    * Acquires write lock.
    *
-   * @return {Promise}
+   * @return
    * @private
    */
   _acquireWriteLock(): Promise.Disposer<void> {
@@ -142,11 +149,11 @@ class Model extends EventEmitter {
   /**
    * Inserts a document.
    *
-   * @param {Document|object} data
-   * @return {Promise}
+   * @param data_
+   * @return
    * @private
    */
-  _insertOne(data_) {
+  _insertOne(data_: Document | Record<string, any>): Promise<any> {
     const schema = this.schema;
 
     // Apply getters
@@ -180,22 +187,22 @@ class Model extends EventEmitter {
   /**
    * Inserts a document.
    *
-   * @param {object} data
-   * @param {function} [callback]
-   * @return {Promise}
+   * @param data
+   * @param callback
+   * @return
    */
-  insertOne(data, callback?) {
+  insertOne(data: object, callback?: (...args: any[]) => any): Promise<any> {
     return Promise.using(this._acquireWriteLock(), () => this._insertOne(data)).asCallback(callback);
   }
 
   /**
    * Inserts documents.
    *
-   * @param {object|array} data
-   * @param {function} [callback]
-   * @return {Promise}
+   * @param data
+   * @param callback
+   * @return
    */
-  insert(data, callback) {
+  insert(data: Record<string, any> | Array<any>, callback: (...args: any[]) => any): Promise<any> {
     if (Array.isArray(data)) {
       return Promise.mapSeries(data, item => this.insertOne(item)).asCallback(callback);
     }
@@ -206,11 +213,11 @@ class Model extends EventEmitter {
   /**
    * Inserts the document if it does not exist; otherwise updates it.
    *
-   * @param {object} data
-   * @param {function} [callback]
-   * @return {Promise}
+   * @param data
+   * @param callback
+   * @return
    */
-  save(data, callback) {
+  save(data: Record<string, any>, callback: (...args: any[]) => any): Promise<any> {
     const id = data._id;
 
     if (!id) return this.insertOne(data, callback);
@@ -227,12 +234,12 @@ class Model extends EventEmitter {
   /**
    * Updates a document with a compiled stack.
    *
-   * @param {*} id
-   * @param {array} stack
-   * @return {Promise}
+   * @param id
+   * @param stack
+   * @return
    * @private
    */
-  _updateWithStack(id, stack): Promise<any> {
+  _updateWithStack(id: string, stack: Array<any>): Promise<any> {
     const schema = this.schema;
 
     const data = this.data[id];
@@ -269,12 +276,12 @@ class Model extends EventEmitter {
   /**
    * Finds a document by its identifier and update it.
    *
-   * @param {*} id
-   * @param {object} update
-   * @param {function} [callback]
-   * @return {Promise}
+   * @param id
+   * @param update
+   * @param callback
+   * @return
    */
-  updateById(id, update, callback?) {
+  updateById(id: string, update: Record<string, any>, callback?: (...args: any[]) => any): Promise<any> {
     return Promise.using(this._acquireWriteLock(), () => {
       const stack = this.schema._parseUpdate(update);
       return this._updateWithStack(id, stack);
@@ -284,24 +291,24 @@ class Model extends EventEmitter {
   /**
    * Updates matching documents.
    *
-   * @param {object} query
-   * @param {object} data
-   * @param {function} [callback]
-   * @return {Promise}
+   * @param query
+   * @param data
+   * @param callback
+   * @return
    */
-  update(query, data, callback?) {
+  update(query: Record<string, any>, data: Record<string, any>, callback?: (...args: any[]) => any): Promise<any> {
     return this.find(query).update(data, callback);
   }
 
   /**
    * Finds a document by its identifier and replace it.
    *
-   * @param {*} id
-   * @param  {object} data
-   * @return {Promise}
+   * @param id
+   * @param data_
+   * @return
    * @private
    */
-  _replaceById(id, data_) {
+  _replaceById(id: string, data_: Record<string, any>): Promise<any> {
     const schema = this.schema;
 
     if (!this.has(id)) {
