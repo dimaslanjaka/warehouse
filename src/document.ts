@@ -2,16 +2,16 @@ import rfdc from 'rfdc';
 const cloneDeep = rfdc();
 
 abstract class Document {
-  abstract _model;
+  abstract _model: import('./model').default;
   _id!: any;
-  abstract _schema;
+  abstract _schema: import('./schema').default;
 
   /**
    * Document constructor.
    *
-   * @param {object} data
+   * @param data
    */
-  constructor(data) {
+  constructor(data: Record<string, any>) {
     if (data) {
       Object.assign(this, data);
     }
@@ -20,51 +20,51 @@ abstract class Document {
   /**
    * Saves the document.
    *
-   * @param {function} [callback]
-   * @return {Promise}
+   * @param callback
+   * @return
    */
-  save(callback) {
+  save(callback?: (...args: any[]) => any): Promise<any> {
     return this._model.save(this, callback);
   }
 
   /**
    * Updates the document.
    *
-   * @param {object} data
-   * @param {function} [callback]
-   * @return {Promise}
+   * @param data
+   * @param callback
+   * @return
    */
-  update(data, callback) {
+  update(data: Record<string, any>, callback?: (...args: any[]) => any): Promise<any> {
     return this._model.updateById(this._id, data, callback);
   }
 
   /**
    * Replaces the document.
    *
-   * @param {object} data
-   * @param {function} [callback]
-   * @return {Promise}
+   * @param data
+   * @param callback
+   * @return
    */
-  replace(data, callback) {
+  replace(data: Record<string, any>, callback?: (...args: any[]) => any): Promise<any> {
     return this._model.replaceById(this._id, data, callback);
   }
 
   /**
    * Removes the document.
    *
-   * @param {function} [callback]
-   * @return {Promise}
+   * @param callback
+   * @return
    */
-  remove(callback) {
+  remove(callback?: (...args: any[]) => any): Promise<any> {
     return this._model.removeById(this._id, callback);
   }
 
   /**
    * Returns a plain JavaScript object.
    *
-   * @return {object}
+   * @return
    */
-  toObject() {
+  toObject(): Record<string, any> {
     const keys = Object.keys(this);
     const obj = {};
 
@@ -81,7 +81,7 @@ abstract class Document {
   /**
    * Returns a string representing the document.
    *
-   * @return {String}
+   * @return
    */
   toString() {
     return JSON.stringify(this);
@@ -90,10 +90,10 @@ abstract class Document {
   /**
    * Populates document references.
    *
-   * @param {String|Object} expr
-   * @return {Document}
+   * @param expr
+   * @return
    */
-  populate(expr) {
+  populate(expr: string | Record<string, any>): Document {
     const stack = this._schema._parsePopulate(expr);
     return this._model._populate(this, stack);
   }
