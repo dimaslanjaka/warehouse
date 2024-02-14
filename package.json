@@ -1,6 +1,6 @@
 {
   "name": "warehouse",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Simple JSON-based database",
   "main": "dist/database",
   "directories": {
@@ -10,7 +10,7 @@
     "dist/"
   ],
   "scripts": {
-    "prepublish ": "npm install && npm run clean && npm run build",
+    "prepublishOnly": "npm install && npm run clean && npm run build",
     "build": "tsc -b",
     "clean": "tsc -b --clean",
     "preeslint": "npm run clean && npm run build",
@@ -45,16 +45,16 @@
     "@types/jsonstream": "^0.8.30",
     "@types/mocha": "^10.0.0",
     "@types/node": "^18.11.7",
-    "@types/sinon": "^10.0.13",
+    "@types/sinon": "^17.0.3",
     "@types/through2": "^2.0.36",
-    "c8": "^8.0.1",
+    "c8": "^9.0.0",
     "chai": "^4.3.6",
     "chai-as-promised": "^7.1.1",
     "eslint": "^8.26.0",
     "eslint-config-hexo": "^5.0.0",
     "lodash": "^4.17.21",
     "mocha": "^10.1.0",
-    "sinon": "^15.0.2",
+    "sinon": "^17.0.1",
     "ts-node": "^10.9.1",
     "typedoc": "^0.25.0",
     "typedoc-plugin-rename-defaults": "^0.7.0",

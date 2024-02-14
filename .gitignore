@@ -13,3 +13,4 @@ dist
 **/yarn.lock
 **/package-lock.json
 **/.vscode
+pnpm-lock.yaml
