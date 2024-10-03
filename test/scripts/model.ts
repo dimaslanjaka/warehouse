@@ -7,7 +7,7 @@ import lodash from 'lodash';
 const { sortBy } = lodash;
 import Promise from 'bluebird';
 import sinon from 'sinon';
-import cuid from 'cuid';
+import { nanoid } from 'nanoid';
 import Database from '../../dist/database';
 import type Query from '../../dist/query';
 import type Document from '../../dist/document';
@@ -37,7 +37,15 @@ describe('Model', () => {
 
   const db = new Database();
 
-  const userSchema = new Schema({
+  const userSchema = new Schema<{
+    name: {
+      first: string;
+      last: string;
+    }
+    email: string;
+    age: number;
+    posts: string[];
+  }>({
     name: {
       first: String,
       last: String
@@ -124,7 +132,6 @@ describe('Model', () => {
   it('insert() - already existed', () => {
     let user;
 
-    // @ts-ignore
     return (User.insert({}).then(data => {
       user = data;
       return User.insert(data);
@@ -214,7 +221,7 @@ describe('Model', () => {
   }).then(data => User.removeById(data._id)));
 
   it('save() - sync problem', () => {
-    const id = cuid();
+    const id = 'cuid' + nanoid();
 
     return Promise.all([
       User.save({_id: id, age: 1}),
@@ -972,7 +979,7 @@ describe('Model', () => {
 
   it('populate() - error', () => {
     try {
-      // @ts-ignore
+      // @ts-expect-error
       Post.populate();
     } catch (err) {
       err.message.should.eql('path is required');

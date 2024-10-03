@@ -30,11 +30,11 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "^3.7.2",
-    "cuid": "^2.1.8",
     "graceful-fs": "^4.2.10",
     "hexo-log": "workspace:^",
     "is-plain-object": "^5.0.0",
     "jsonparse": "^1.3.1",
+    "nanoid": "^3.3.7",
     "rfdc": "^1.3.0",
     "through2": "^4.0.2"
   },
@@ -56,7 +56,7 @@
     "mocha": "^10.1.0",
     "sinon": "^17.0.1",
     "ts-node": "^10.9.1",
-    "typedoc": "^0.25.0",
+    "typedoc": "^0.26.2",
     "typedoc-plugin-rename-defaults": "^0.7.0",
     "typescript": "^5.0.3"
   },

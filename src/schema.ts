@@ -1,11 +1,13 @@
 import SchemaType from './schematype';
 import * as Types from './types/index';
-import Promise from 'bluebird';
+import BluebirdPromise from 'bluebird';
 import { getProp, setProp, delProp } from './util';
 import PopulationError from './error/population';
 import SchemaTypeVirtual from './types/virtual';
 import { isPlainObject } from 'is-plain-object';
 import type { AddSchemaTypeLoopOptions, AddSchemaTypeOptions, PopulateResult, SchemaTypeOptions } from './types';
+import type Model from './model';
+import type Document from './document';
 
 /**
  * @callback queryFilterCallback
@@ -48,12 +50,12 @@ const checkHookType = (type: string) => {
   }
 };
 
-const hookWrapper = (fn: (...args: any[]) => void): (...args: any[]) => Promise<any> => {
+const hookWrapper = (fn: (...args: any[]) => void): (...args: any[]) => BluebirdPromise<any> => {
   if (fn.length > 1) {
-    return Promise.promisify(fn);
+    return BluebirdPromise.promisify(fn);
   }
 
-  return Promise.method(fn);
+  return BluebirdPromise.method(fn);
 };
 
 /**
@@ -379,18 +381,18 @@ class QueryParser {
 }
 
 
-class Schema {
+class Schema<T = any> {
   paths: Record<string, SchemaType<any>> = {};
-  statics: Record<string, (...args: any[]) => any> = {};
-  methods: Record<string, (...args: any[]) => any> = {};
+  statics: Record<string, (this: Model<T>, ...args: any[]) => any> = {};
+  methods: Record<string, (this: T, ...args: any[]) => any> = {};
   hooks: {
     pre: {
-      save: ((...args: any[]) => Promise<any>)[]
-      remove: ((...args: any[]) => Promise<any>)[]
+      save: ((...args: any[]) => BluebirdPromise<any>)[]
+      remove: ((...args: any[]) => BluebirdPromise<any>)[]
     };
     post: {
-      save: ((...args: any[]) => Promise<any>)[]
-      remove: ((...args: any[]) => Promise<any>)[]
+      save: ((...args: any[]) => BluebirdPromise<any>)[]
+      remove: ((...args: any[]) => BluebirdPromise<any>)[]
     };
   };
   stacks: {
@@ -557,7 +559,7 @@ class Schema {
    * @param {Function} [getter]
    * @return {SchemaType.Virtual}
    */
-  virtual(name: string, getter?: () => any): SchemaTypeVirtual {
+  virtual(name: string, getter?: (this: T) => any): SchemaTypeVirtual<T> {
     const virtual = new Types.Virtual(name, {});
     if (getter) virtual.get(getter);
 
@@ -598,7 +600,7 @@ class Schema {
    * @param {String} name
    * @param {Function} fn
    */
-  method(name: string, fn: (...args: any[]) => any) {
+  method(name: string, fn: (this: T, ...args: any[]) => any) {
     if (!name) throw new TypeError('Method name is required!');
 
     if (typeof fn !== 'function') {
@@ -614,7 +616,7 @@ class Schema {
    * @param {String} name
    * @param {Function} fn
    */
-  static(name: string, fn: (...args: any[]) => any) {
+  static(name: string, fn: (this: Model<T>, ...args: any[]) => any) {
     if (!name) throw new TypeError('Method name is required!');
 
     if (typeof fn !== 'function') {

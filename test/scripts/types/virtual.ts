@@ -3,7 +3,7 @@ const should = chai.should(); // eslint-disable-line
 import SchemaTypeVirtual from '../../../dist/types/virtual';
 
 describe('SchemaTypeVirtual', () => {
-  const type = new SchemaTypeVirtual('test');
+  const type = new SchemaTypeVirtual<any>('test');
 
   it('get()', () => {
     const getter = () => 'foo';
@@ -13,7 +13,7 @@ describe('SchemaTypeVirtual', () => {
   });
 
   it('get() - type check', () => {
-    // @ts-ignore
+    // @ts-expect-error
     (() => type.get(123)).should.to.throw(TypeError, 'Getter must be a function!');
   });
 
@@ -27,7 +27,7 @@ describe('SchemaTypeVirtual', () => {
   });
 
   it('set() - type check', () => {
-    // @ts-ignore
+    // @ts-expect-error
     (() => type.set(123)).should.to.throw(TypeError, 'Setter must be a function!');
   });
 
