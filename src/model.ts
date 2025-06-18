@@ -155,7 +155,7 @@ class Model<T> extends EventEmitter {
   _acquireWriteLock(): BluebirdPromise.Disposer<void> {
     const mutex = this._mutex;
 
-    return new BluebirdPromise((resolve, reject) => {
+    return new BluebirdPromise((resolve, _reject) => {
       mutex.lock(resolve);
     }).disposer(() => {
       mutex.unlock();
@@ -173,7 +173,7 @@ class Model<T> extends EventEmitter {
     const schema = this.schema;
 
     // Apply getters
-    const data = (data_ instanceof this.Document ? data_ : this.new(data_));
+    const data = data_ instanceof this.Document ? data_ : this.new(data_);
     const id = data._id;
 
     // Check ID
@@ -336,7 +336,7 @@ class Model<T> extends EventEmitter {
     (data_ as any)._id = id;
 
     // Apply getters
-    const data = (data_ instanceof this.Document ? data_ : this.new(data_));
+    const data = data_ instanceof this.Document ? data_ : this.new(data_);
 
     // Apply setters
     const result = data.toObject();
@@ -870,7 +870,7 @@ class Model<T> extends EventEmitter {
    * @return {Function}
    * @private
    */
-  _populateGetter(data: PropertyKey, model: Model<T>, options: unknown): () => Document<T> {
+  _populateGetter(data: PropertyKey, model: Model<T>, _options: unknown): () => Document<T> {
     let hasCache = false;
     let cache: Document<T>;
 
