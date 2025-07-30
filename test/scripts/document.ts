@@ -1,8 +1,8 @@
-import chai from 'chai';
+import * as chai from 'chai';
 const should = chai.should();
-import Database from '../../src/database';
-import Document from '../../src/document';
-import type Model from '../../src/model';
+import Database from '../../src/database.js';
+import Document from '../../src/document.js';
+import type Model from '../../src/model.js';
 
 interface UserType {
   name?: string;

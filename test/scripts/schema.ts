@@ -1,6 +1,6 @@
-import chai from 'chai';
+import * as chai from 'chai';
 const should = chai.should(); // eslint-disable-line
-import Database from '../../src/database';
+import Database from '../../src/database.js';
 
 describe('Schema', () => {
   const Schema = Database.Schema;

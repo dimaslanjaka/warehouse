@@ -1,7 +1,7 @@
-import chai from 'chai';
+import * as chai from 'chai';
 const should = chai.should();
-import ValidationError from '../../src/error/validation';
-import SchemaType from '../../src/schematype';
+import ValidationError from '../../src/error/validation.js';
+import SchemaType from '../../src/schematype.js';
 
 describe('SchemaType', () => {
   const type = new SchemaType<number>('test');

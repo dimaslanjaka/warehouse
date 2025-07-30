@@ -1,11 +1,11 @@
-import chai from 'chai';
+import * as chai from 'chai';
 const should = chai.should();
 import lodash from 'lodash';
 const { sortBy } = lodash;
 import Promise from 'bluebird';
-import Document from '../../src/document';
-import Database from '../../src/database';
-import type Model from '../../src/model';
+import Document from '../../src/document.js';
+import Database from '../../src/database.js';
+import type Model from '../../src/model.js';
 
 interface UserType {
   name?: string;

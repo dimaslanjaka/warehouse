@@ -1,4 +1,4 @@
-import type SchemaType from './schematype';
+import type SchemaType from './schematype.js';
 
 interface Constructor {
   new (...args: any[]): any;

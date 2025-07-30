@@ -1,4 +1,4 @@
-import WarehouseError from '../error';
+import WarehouseError from '../error.js';
 
 class PopulationError extends WarehouseError {}
 

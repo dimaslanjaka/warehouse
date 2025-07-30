@@ -1,13 +1,13 @@
-import SchemaType from './schematype';
-import * as Types from './types/index';
+import SchemaType from './schematype.js';
+import * as Types from './types/index.js';
 import BluebirdPromise from 'bluebird';
-import { getProp, setProp, delProp } from './util';
-import PopulationError from './error/population';
-import SchemaTypeVirtual from './types/virtual';
+import { getProp, setProp, delProp } from './util.js';
+import PopulationError from './error/population.js';
+import SchemaTypeVirtual from './types/virtual.js';
 import { isPlainObject } from 'is-plain-object';
-import type { AddSchemaTypeLoopOptions, AddSchemaTypeOptions, AddSchemaTypeSimpleOptions, Options, queryCallback, queryFilterCallback, queryParseCallback, SchemaTypeOptions } from './types';
-import type Model from './model';
-import type Document from './document';
+import type { AddSchemaTypeLoopOptions, AddSchemaTypeOptions, AddSchemaTypeSimpleOptions, Options, queryCallback, queryFilterCallback, queryParseCallback, SchemaTypeOptions } from './types.js';
+import type Model from './model.js';
+import type Document from './document.js';
 
 const builtinTypes = new Set(['String', 'Number', 'Boolean', 'Array', 'Object', 'Date', 'Buffer']);
 

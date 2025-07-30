@@ -1,6 +1,6 @@
-import chai from 'chai';
+import * as chai from 'chai';
 const should = chai.should(); // eslint-disable-line
-import SchemaTypeObject from '../../../src/types/object';
+import SchemaTypeObject from '../../../src/types/object.js';
 
 describe('SchemaTypeObject', () => {
   const type = new SchemaTypeObject('test');

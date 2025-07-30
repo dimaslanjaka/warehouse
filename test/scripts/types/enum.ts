@@ -1,7 +1,7 @@
-import chai from 'chai';
+import * as chai from 'chai';
 const should = chai.should(); // eslint-disable-line
-import ValidationError from '../../../src/error/validation';
-import SchemaTypeEnum from '../../../src/types/enum';
+import ValidationError from '../../../src/error/validation.js';
+import SchemaTypeEnum from '../../../src/types/enum.js';
 
 describe('SchemaTypeEnum', () => {
   it('validate()', () => {

@@ -1,10 +1,10 @@
-import chai from 'chai';
+import * as chai from 'chai';
 const should = chai.should();
-import ValidationError from '../../../src/error/validation';
-import SchemaTypeArray from '../../../src/types/array';
-import SchemaTypeString from '../../../src/types/string';
-import SchemaTypeDate from '../../../src/types/date';
-import SchemaTypeBoolean from '../../../src/types/boolean';
+import ValidationError from '../../../src/error/validation.js';
+import SchemaTypeArray from '../../../src/types/array.js';
+import SchemaTypeString from '../../../src/types/string.js';
+import SchemaTypeDate from '../../../src/types/date.js';
+import SchemaTypeBoolean from '../../../src/types/boolean.js';
 
 describe('SchemaTypeArray', () => {
   const type = new SchemaTypeArray('test');

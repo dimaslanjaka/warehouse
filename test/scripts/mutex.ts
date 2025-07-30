@@ -1,6 +1,6 @@
-import chai from 'chai';
+import * as chai from 'chai';
 const should = chai.should(); // eslint-disable-line
-import Mutex from '../../src/mutex';
+import Mutex from '../../src/mutex.js';
 import sinon from 'sinon';
 
 describe('Mutex', () => {

@@ -1,6 +1,6 @@
-import SchemaType from '../schematype';
+import SchemaType from '../schematype.js';
 import { nanoid } from 'nanoid';
-import ValidationError from '../error/validation';
+import ValidationError from '../error/validation.js';
 
 /**
  * [CUID](https://github.com/ai/nanoid) schema type.

@@ -1,6 +1,6 @@
-import chai from 'chai';
+import * as chai from 'chai';
 const should = chai.should();
-import { shuffle, getProp, setProp, delProp, setGetter, arr2obj, reverse, parseArgs } from '../../src/util';
+import { shuffle, getProp, setProp, delProp, setGetter, arr2obj, reverse, parseArgs } from '../../src/util.js';
 
 describe('util', () => {
   it('shuffle()', () => {

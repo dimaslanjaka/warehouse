@@ -1,5 +1,5 @@
-import SchemaType from '../schematype';
-import ValidationError from '../error/validation';
+import SchemaType from '../schematype.js';
+import ValidationError from '../error/validation.js';
 
 /**
  * Date schema type.

@@ -1,8 +1,8 @@
 import rfdc from 'rfdc';
-import type Model from './model';
-import type Schema from './schema';
+import type Model from './model.js';
+import type Schema from './schema.js';
 import type BluebirdPromise from 'bluebird';
-import type { NodeJSLikeCallback, Options } from './types';
+import type { NodeJSLikeCallback, Options } from './types.js';
 const cloneDeep = rfdc();
 
 abstract class Document<T> {

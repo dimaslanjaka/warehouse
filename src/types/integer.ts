@@ -1,5 +1,5 @@
-import SchemaTypeNumber from './number';
-import ValidationError from '../error/validation';
+import SchemaTypeNumber from './number.js';
+import ValidationError from '../error/validation.js';
 
 /**
  * Integer schema type.
