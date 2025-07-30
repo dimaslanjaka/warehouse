@@ -2,16 +2,16 @@ import { EventEmitter } from 'events';
 import rfdc from 'rfdc';
 const cloneDeep = rfdc();
 import BluebirdPromise from 'bluebird';
-import { parseArgs, getProp, setGetter, shuffle, asyncWriteToStream } from './util';
-import Document from './document';
-import Query from './query';
-import Schema from './schema';
-import * as Types from './types/index';
-import WarehouseError from './error';
-import PopulationError from './error/population';
-import Mutex from './mutex';
-import type Database from './database';
-import type { AddSchemaTypeOptions, NodeJSLikeCallback, Options, queryCallback } from './types';
+import { parseArgs, getProp, setGetter, shuffle, asyncWriteToStream } from './util.js';
+import Document from './document.js';
+import Query from './query.js';
+import Schema from './schema.js';
+import * as Types from './types/index.js';
+import WarehouseError from './error.js';
+import PopulationError from './error/population.js';
+import Mutex from './mutex.js';
+import type Database from './database.js';
+import type { AddSchemaTypeOptions, NodeJSLikeCallback, Options, queryCallback } from './types.js';
 import type { Writable } from 'node:stream';
 
 class Model<T> extends EventEmitter {
@@ -59,7 +59,19 @@ class Model<T> extends EventEmitter {
       _schema!: Schema<T>;
       constructor(data: T) {
         super(data);
-
+        // Ensure _model and _schema are set on the instance (not in base class)
+        Object.defineProperty(this, '_model', {
+          value: _Document.prototype._model,
+          writable: true,
+          configurable: true,
+          enumerable: false,
+        });
+        Object.defineProperty(this, '_schema', {
+          value: _Document.prototype._schema,
+          writable: true,
+          configurable: true,
+          enumerable: false,
+        });
         // Apply getters
         schema._applyGetters(this);
       }
@@ -520,7 +532,11 @@ class Model<T> extends EventEmitter {
       }
     }
 
-    return options.lean ? arr as T[] : new this.Query(arr as Document<T>[]);
+    if (options.lean) return arr as T[];
+    const queryInstance = new this.Query(arr as Document<T>[]);
+    queryInstance._model = this;
+    queryInstance._schema = this.schema;
+    return queryInstance;
   }
 
   /**
@@ -898,34 +914,50 @@ class Model<T> extends EventEmitter {
     return () => {
       if (!hasCache) {
         let arr: Document<T>[] = [];
-
-        for (let i = 0, len = data.length; i < len; i++) {
-          arr.push(model.findById(data[i]));
-        }
-
-        if (options.match) {
-          cache = new Query(arr).find(options.match, options);
-        } else if (options.skip) {
-          if (options.limit) {
-            arr = arr.slice(options.skip, options.skip + options.limit);
-          } else {
-            arr = arr.slice(options.skip);
+        // If no match or sort, apply skip/limit to data array before mapping
+        if (!options.match && !options.sort && (options.skip || options.limit)) {
+          let start = options.skip || 0;
+          let end = options.limit ? start + options.limit : undefined;
+          const sliced = data.slice(start, end);
+          for (let i = 0, len = sliced.length; i < len; i++) {
+            arr.push(model.findById(sliced[i]));
           }
-
-          cache = new Query(arr);
-        } else if (options.limit) {
-          cache = new Query(arr.slice(0, options.limit));
         } else {
-          cache = new Query(arr);
+          // Default: map all, then apply match/sort/skip/limit as before
+          for (let i = 0, len = data.length; i < len; i++) {
+            arr.push(model.findById(data[i]));
+          }
         }
 
-        if (options.sort) {
-          cache = cache.sort(options.sort);
+        // Create Query and set _model/_schema
+        let query = new Query(arr);
+        query._model = model;
+        query._schema = model.schema;
+
+        // Only apply match/sort/skip/limit if match or sort is present
+        if (options.match || options.sort) {
+          // 1. match
+          if (options.match) {
+            const { skip, limit, ...findOptions } = options;
+            query = query.find(options.match, { ...findOptions, lean: false });
+          }
+          // 2. sort
+          if (options.sort) {
+            query = query.sort(options.sort);
+          }
+          // 3. skip
+          if (options.skip) {
+            query = query.skip(options.skip);
+          }
+          // 4. limit
+          if (options.limit) {
+            query = query.limit(options.limit);
+          }
         }
 
+        cache = query;
         hasCache = true;
       }
-
       return cache;
     };
   }
