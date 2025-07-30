@@ -1,5 +1,9 @@
-// scripts/replace-version.js
-// Replaces the __WAREHOUSE_VERSION__ placeholder in built files with the version from package.json
+/**
+ * Replaces the __WAREHOUSE_VERSION__ placeholder in built files with the version from package.json.
+ *
+ * - Updates placeholders in built database.js files (CJS and ESM).
+ * - Also updates the placeholder in test/fixtures/db.json if present.
+ */
 
 import fs from 'fs';
 import path from 'path';
