@@ -16,9 +16,9 @@ const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
 
 const defaultExports = {
   '.': {
-    import: './dist/esm/database.js',
-    require: './dist/cjs/database.js',
-    types: './dist/esm/database.d.ts'
+    import: './dist/esm/index.js',
+    require: './dist/cjs/index.js',
+    types: './dist/types/index.d.ts'
   },
   './package.json': './package.json'
 };
@@ -27,7 +27,7 @@ fs.readdirSync(path.join(__dirname, '../src')).forEach((file) => {
   defaultExports[`./dist/${file.replace('.ts', '')}`] = {
     import: `./dist/esm/${file.replace('.ts', '.js')}`,
     require: `./dist/cjs/${file.replace('.ts', '.js')}`,
-    types: `./dist/esm/${file.replace('.ts', '.d.ts')}`
+    types: `./dist/types/${file.replace('.ts', '.d.ts')}`
   };
 });
 
