@@ -12,6 +12,61 @@
       "require": "./dist/cjs/database.js",
       "types": "./dist/esm/database.d.ts"
     },
+    "./dist/database": {
+      "import": "./dist/esm/database.js",
+      "require": "./dist/cjs/database.js",
+      "types": "./dist/esm/database.d.ts"
+    },
+    "./dist/document": {
+      "import": "./dist/esm/document.js",
+      "require": "./dist/cjs/document.js",
+      "types": "./dist/esm/document.d.ts"
+    },
+    "./dist/error": {
+      "import": "./dist/esm/error.js",
+      "require": "./dist/cjs/error.js",
+      "types": "./dist/esm/error.d.ts"
+    },
+    "./dist/lib": {
+      "import": "./dist/esm/lib",
+      "require": "./dist/cjs/lib",
+      "types": "./dist/esm/lib"
+    },
+    "./dist/model": {
+      "import": "./dist/esm/model.js",
+      "require": "./dist/cjs/model.js",
+      "types": "./dist/esm/model.d.ts"
+    },
+    "./dist/mutex": {
+      "import": "./dist/esm/mutex.js",
+      "require": "./dist/cjs/mutex.js",
+      "types": "./dist/esm/mutex.d.ts"
+    },
+    "./dist/query": {
+      "import": "./dist/esm/query.js",
+      "require": "./dist/cjs/query.js",
+      "types": "./dist/esm/query.d.ts"
+    },
+    "./dist/schema": {
+      "import": "./dist/esm/schema.js",
+      "require": "./dist/cjs/schema.js",
+      "types": "./dist/esm/schema.d.ts"
+    },
+    "./dist/schematype": {
+      "import": "./dist/esm/schematype.js",
+      "require": "./dist/cjs/schematype.js",
+      "types": "./dist/esm/schematype.d.ts"
+    },
+    "./dist/types": {
+      "import": "./dist/esm/types.js",
+      "require": "./dist/cjs/types.js",
+      "types": "./dist/esm/types.d.ts"
+    },
+    "./dist/util": {
+      "import": "./dist/esm/util.js",
+      "require": "./dist/cjs/util.js",
+      "types": "./dist/esm/util.d.ts"
+    },
     "./package.json": "./package.json"
   },
   "directories": {
@@ -24,7 +79,9 @@
     "prepublishOnly": "npm install && npm run clean && npm run build",
     "build-cjs": "tsc -p tsconfig.cjs.json",
     "build-esm": "tsc -p tsconfig.esm.json",
-    "build": "npm run build-cjs && npm run build-esm && node scripts/replace-version.js",
+    "build-exports": "node scripts/build-exports.js",
+    "replace-version": "node scripts/replace-version.js",
+    "build": "npm run build-cjs && npm run build-esm && npm run replace-version && npm run build-exports",
     "clean": "npx --yes rimraf dist tmp && npm run build",
     "eslint": "eslint src test",
     "test": "mocha --loader=ts-node/esm",
