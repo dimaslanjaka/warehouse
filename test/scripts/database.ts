@@ -1,11 +1,17 @@
-import chai from 'chai';
-const should = chai.should(); // eslint-disable-line
-import path from 'path';
 import Promise from 'bluebird';
-import sinon from 'sinon';
-import Database from '../../src/database';
-import Model from '../../src/model';
+import * as chai from 'chai';
 import fs from 'fs';
+import path from 'path';
+import sinon from 'sinon';
+import { fileURLToPath } from 'url';
+import Database from '../../src/database.js';
+import Model from '../../src/model.js';
+const should = chai.should(); // eslint-disable-line
+
+// Polyfill __dirname for ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const promisifyFs = Promise.promisifyAll(fs);
 
 const DB_PATH = path.join(path.dirname(__dirname), 'fixtures', 'db.json');
@@ -13,17 +19,16 @@ const DB_VERSION = 1;
 
 describe('Database', () => {
   const Schema = Database.Schema;
-  const db = new Database({path: DB_PATH, version: DB_VERSION});
+  const db = new Database({ path: DB_PATH, version: DB_VERSION });
 
-  const TestModel = db.model('Test', new Schema({
-    _id: {type: String, required: true}
-  }));
+  const TestModel = db.model(
+    'Test',
+    new Schema({
+      _id: { type: String, required: true }
+    })
+  );
 
-  before(() => TestModel.insert([
-    {_id: 'A'},
-    {_id: 'B'},
-    {_id: 'C'}
-  ]));
+  before(() => TestModel.insert([{ _id: 'A' }, { _id: 'B' }, { _id: 'C' }]));
 
   it('model() - get', () => {
     const Test = db.model('Test');
@@ -38,16 +43,12 @@ describe('Database', () => {
   });
 
   it('load()', () => {
-    const db = new Database({path: DB_PATH});
+    const db = new Database({ path: DB_PATH });
 
     return db.load().then(() => {
       const Test = db.model('Test');
 
-      Test.toArray().should.eql([
-        Test.new({_id: 'A'}),
-        Test.new({_id: 'B'}),
-        Test.new({_id: 'C'})
-      ]);
+      Test.toArray().should.eql([Test.new({ _id: 'A' }), Test.new({ _id: 'B' }), Test.new({ _id: 'C' })]);
     });
   });
 
@@ -85,24 +86,24 @@ describe('Database', () => {
     });
   });
 
-  it('save()', () => db.save().then(() => promisifyFs.readFileAsync(DB_PATH)).then(data => {
-    // TODO: fix
-    // @ts-ignore
-    const json = JSON.parse(data);
+  it('save()', () =>
+    db
+      .save()
+      .then(() => promisifyFs.readFileAsync(DB_PATH))
+      .then((data) => {
+        // TODO: fix
+        // @ts-ignore
+        const json = JSON.parse(data);
 
-    json.meta.should.eql({
-      version: DB_VERSION,
-      warehouse: Database.version
-    });
+        json.meta.should.eql({
+          version: DB_VERSION,
+          warehouse: Database.version
+        });
 
-    json.models.should.eql({
-      Test: [
-        {_id: 'A'},
-        {_id: 'B'},
-        {_id: 'C'}
-      ]
-    });
-  }));
+        json.models.should.eql({
+          Test: [{ _id: 'A' }, { _id: 'B' }, { _id: 'C' }]
+        });
+      }));
 
   it('toJSON()', () => {
     const db = new Database({
