@@ -1,17 +1,17 @@
-import { parse as createJsonParseStream } from './lib/jsonstream';
+import { parse as createJsonParseStream } from './lib/jsonstream/index.js';
 import BluebirdPromise from 'bluebird';
 import { createReadStream, createWriteStream } from 'graceful-fs';
 import { pipeline, Stream } from 'stream';
-import Model from './model';
-import Schema from './schema';
-import SchemaType from './schematype';
-import WarehouseError from './error';
+import Model from './model.js';
+import Schema from './schema.js';
+import SchemaType from './schematype.js';
+import WarehouseError from './error.js';
 import { logger } from 'hexo-log';
-import type { AddSchemaTypeOptions, NodeJSLikeCallback } from './types';
-import { asyncWriteToStream } from './util';
+import type { AddSchemaTypeOptions, NodeJSLikeCallback } from './types.js';
+import { asyncWriteToStream } from './util.js';
+import pkg from '../package.json';
 
 const log = logger();
-const pkg = require('../package.json');
 const pipelineAsync = BluebirdPromise.promisify(pipeline) as unknown as (...args: Stream[]) => BluebirdPromise<unknown>;
 
 async function exportAsync(database: Database, path: string): Promise<void> {
@@ -189,7 +189,7 @@ class Database {
   Schema: typeof Schema;
   static SchemaType = SchemaType;
   SchemaType: typeof SchemaType;
-  static version: number;
+  static version: string;
 }
 
 Database.prototype.Schema = Schema;
