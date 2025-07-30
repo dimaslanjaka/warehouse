@@ -12,7 +12,12 @@
       "require": "./dist/cjs/database.js",
       "types": "./dist/esm/database.d.ts"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./schematype": {
+      "import": "./dist/esm/schematype.js",
+      "require": "./dist/cjs/schematype.js",
+      "types": "./dist/esm/schematype.d.ts"
+    }
   },
   "directories": {
     "lib": "./dist"
