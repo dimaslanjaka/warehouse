@@ -1,3 +1,10 @@
+/**
+ * Auto expands the `exports` field in package.json based on the files in src/.
+ *
+ * - Generates the `exports` field for each file in src/.
+ * - Ensures consistent and up-to-date exports for both ESM and CJS builds.
+ */
+
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
