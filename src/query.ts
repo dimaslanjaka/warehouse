@@ -1,9 +1,9 @@
 import BluebirdPromise from 'bluebird';
-import { parseArgs, shuffle } from './util';
-import type Model from './model';
-import type Schema from './schema';
-import type Document from './document';
-import type { NodeJSLikeCallback, Options } from './types';
+import { parseArgs, shuffle } from './util.js';
+import type Model from './model.js';
+import type Schema from './schema.js';
+import type Document from './document.js';
+import type { NodeJSLikeCallback, Options } from './types.js';
 
 abstract class Query<T> {
   data: Document<T>[];
@@ -388,6 +388,18 @@ abstract class Query<T> {
    * @return {Query}
    */
   populate(expr: string | string[] | Partial<Options>[] | Partial<Options>): Query<T> {
+    if (
+      expr === undefined ||
+      expr === null ||
+      (typeof expr === 'string' && expr.trim() === '') ||
+      (Array.isArray(expr) && expr.length === 0) ||
+      (typeof expr === 'object' && !Array.isArray(expr) && Object.keys(expr).length === 0)
+    ) {
+      throw new Error('path is required');
+    }
+    if (!this._schema) {
+      throw new Error('Query schema is not defined');
+    }
     const stack = this._schema._parsePopulate(expr);
     const { data, length } = this;
     const model = this._model;
