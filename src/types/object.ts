@@ -1,4 +1,4 @@
-import SchemaType from '../schematype';
+import SchemaType from '../schematype.js';
 
 /**
  * Object schema type.

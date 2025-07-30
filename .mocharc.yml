@@ -1,1 +1,6 @@
 color: true
+reporter: spec
+spec: "./test/scripts/**/*.ts"
+extension: ['ts']
+require:
+  - "ts-node/register"

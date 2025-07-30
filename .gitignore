@@ -1,16 +1,37 @@
+# OS-specific
 .DS_Store
+
+# Dependency directories and lockfiles
+node_modules/
 **/node_modules/
-**/.yarn/cache
-**/.yarn/versions
-**/.yarn/unplug*
-**/.yarn/*.gz
-**/tmp/
-.idea/
-*.log
-docs/
-coverage/
-dist
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.yarn/cache/
+.yarn/unplugged/
+yarn.lock
 **/yarn.lock
+package-lock.json
 **/package-lock.json
-**/.vscode
 pnpm-lock.yaml
+
+# Build output
+dist/
+coverage/
+tmp/
+**/tmp/
+
+# Editor/IDE
+.vscode/
+.idea/
+
+# Logs and miscellaneous
+*.log
+*.ignore
+
+# Documentation
+docs/

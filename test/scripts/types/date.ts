@@ -1,7 +1,7 @@
-import chai from 'chai';
+import * as chai from 'chai';
 const should = chai.should();
-import ValidationError from '../../../src/error/validation';
-import SchemaTypeDate from '../../../src/types/date';
+import ValidationError from '../../../src/error/validation.js';
+import SchemaTypeDate from '../../../src/types/date.js';
 
 describe('SchemaTypeDate', () => {
   const type = new SchemaTypeDate('test');

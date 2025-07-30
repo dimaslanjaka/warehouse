@@ -1,12 +1,12 @@
-import SchemaType from '../schematype';
-import ValidationError from '../error/validation';
+import SchemaType from '../schematype.js';
+import ValidationError from '../error/validation.js';
 type WithImplicitCoercion<T> = T | { valueOf(): T };
 
 /**
  * Boolean schema type.
  */
 class SchemaTypeBuffer extends SchemaType<Buffer> {
-  options: SchemaType<Buffer>['options'] & { encoding: BufferEncoding; };
+  declare options: SchemaType<Buffer>['options'] & { encoding: BufferEncoding; };
 
   /**
    * @param {string} name

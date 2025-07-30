@@ -1,4 +1,4 @@
-import chai from 'chai';
+import * as chai from 'chai';
 const should = chai.should();
 import chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
@@ -8,8 +8,8 @@ const { sortBy } = lodash;
 import Promise from 'bluebird';
 import sinon from 'sinon';
 import { nanoid } from 'nanoid';
-import Database from '../../src/database';
-import type Model from '../../src/model';
+import Database from '../../src/database.js';
+import type Model from '../../src/model.js';
 
 interface UserType {
   name?: {

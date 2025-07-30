@@ -1,8 +1,8 @@
-import chai from 'chai';
+import * as chai from 'chai';
 const should = chai.should();
 import { nanoid } from 'nanoid';
-import ValidationError from '../../../src/error/validation';
-import SchemaTypeCUID from '../../../src/types/cuid';
+import ValidationError from '../../../src/error/validation.js';
+import SchemaTypeCUID from '../../../src/types/cuid.js';
 
 describe('SchemaTypeCUID', () => {
   const type = new SchemaTypeCUID('test');

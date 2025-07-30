@@ -1,5 +1,5 @@
-import { setProp } from './util';
-import ValidationError from './error/validation';
+import { setProp } from './util.js';
+import ValidationError from './error/validation.js';
 
 /**
  * This is the basic schema type.

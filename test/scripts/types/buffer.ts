@@ -1,7 +1,7 @@
-import chai from 'chai';
+import * as chai from 'chai';
 const should = chai.should();
-import ValidationError from '../../../src/error/validation';
-import SchemaTypeBuffer from '../../../src/types/buffer';
+import ValidationError from '../../../src/error/validation.js';
+import SchemaTypeBuffer from '../../../src/types/buffer.js';
 
 describe('SchemaTypeBuffer', () => {
   const type = new SchemaTypeBuffer('test');

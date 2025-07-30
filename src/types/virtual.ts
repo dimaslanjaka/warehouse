@@ -1,5 +1,5 @@
-import SchemaType from '../schematype';
-import { setGetter } from '../util';
+import SchemaType from '../schematype.js';
+import { setGetter } from '../util.js';
 
 /**
  * Virtual schema type.
