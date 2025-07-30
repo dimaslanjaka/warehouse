@@ -69,6 +69,14 @@
     },
     "./package.json": "./package.json"
   },
+  "typesVersions": {
+    "*": {
+      "dist/*": [
+        "dist/esm/*",
+        "dist/cjs/*"
+      ]
+    }
+  },
   "directories": {
     "lib": "./dist"
   },
