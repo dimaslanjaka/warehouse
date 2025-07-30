@@ -14,7 +14,13 @@ const __dirname = path.dirname(__filename);
 
 const promisifyFs = Promise.promisifyAll(fs);
 
-const DB_PATH = path.join(path.dirname(__dirname), 'fixtures', 'db.json');
+// Use a unique temp file in the project tmp directory for DB_PATH
+const TMP_DIR = path.join(path.dirname(__dirname), '..', 'tmp');
+if (!fs.existsSync(TMP_DIR)) fs.mkdirSync(TMP_DIR, { recursive: true });
+const DB_PATH = path.join(TMP_DIR, `db-${Date.now()}-${Math.random().toString(36).slice(2)}.json`);
+// Copy the fixture to the temp file before tests
+const FIXTURE_PATH = path.join(path.dirname(__dirname), 'fixtures', 'db.json');
+fs.copyFileSync(FIXTURE_PATH, DB_PATH);
 const DB_VERSION = 1;
 
 describe('Database', () => {

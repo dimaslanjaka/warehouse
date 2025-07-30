@@ -1,9 +1,7 @@
 import BluebirdPromise from 'bluebird';
 import fs from 'graceful-fs';
 import { logger } from 'hexo-log';
-import { dirname, join } from 'path';
 import { pipeline, Stream } from 'stream';
-import { fileURLToPath } from 'url';
 import WarehouseError from './error.js';
 import { parse as createJsonParseStream } from './lib/jsonstream/index.js';
 import Model from './model.js';
@@ -12,12 +10,8 @@ import SchemaType from './schematype.js';
 import type { AddSchemaTypeOptions, NodeJSLikeCallback } from './types.js';
 import { asyncWriteToStream } from './util.js';
 
-// Polyfill __dirname for ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Load package.json manually for CJS/ESM compatibility
-const pkg = JSON.parse(fs.readFileSync(join(__dirname, '../package.json'), { encoding: 'utf8' }));
+// Use a unique placeholder for version, to be replaced after build
+const __WAREHOUSE_VERSION__ = '__WAREHOUSE_VERSION_UNIQUE_2A1B3C4D5E6F__';
 
 const log = logger();
 const pipelineAsync = BluebirdPromise.promisify(pipeline) as unknown as (...args: Stream[]) => BluebirdPromise<unknown>;
@@ -32,7 +26,7 @@ async function exportAsync(database: Database, path: string): Promise<void> {
       writeStream,
       `{"meta":${JSON.stringify({
         version: database.options.version,
-        warehouse: pkg.version
+        warehouse: __WAREHOUSE_VERSION__
       })},"models":{`
     );
     if (p) await p;
@@ -194,7 +188,7 @@ class Database {
     return {
       meta: {
         version: this.options.version,
-        warehouse: pkg.version
+        warehouse: __WAREHOUSE_VERSION__
       },
       models
     };
@@ -208,6 +202,6 @@ class Database {
 
 Database.prototype.Schema = Schema;
 Database.prototype.SchemaType = SchemaType;
-Database.version = pkg.version;
+Database.version = __WAREHOUSE_VERSION__;
 
 export default Database;
