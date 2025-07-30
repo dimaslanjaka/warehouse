@@ -294,4 +294,12 @@ SchemaType.prototype.q$max = SchemaType.prototype.q$lte;
 
 SchemaType.prototype.q$min = SchemaType.prototype.q$gte;
 
+
+// For ESM compatibility
 export default SchemaType;
+if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
+  // For CommonJS compatibility
+  module.exports = SchemaType;
+  // For ESM compatibility
+  module.exports.default = SchemaType;
+}

@@ -422,4 +422,12 @@ Query.prototype.each = Query.prototype.forEach;
 
 Query.prototype.random = Query.prototype.shuffle;
 
+
+// For ESM compatibility
 export default Query;
+if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
+  // For CommonJS compatibility
+  module.exports = Query;
+  // For ESM compatibility
+  module.exports.default = Query;
+}

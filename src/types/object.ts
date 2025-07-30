@@ -17,4 +17,12 @@ class SchemaTypeObject extends SchemaType<Record<string, any>> {
   }
 }
 
+
+// For ESM compatibility
 export default SchemaTypeObject;
+if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
+  // For CommonJS compatibility
+  module.exports = SchemaTypeObject;
+  // For ESM compatibility
+  module.exports.default = SchemaTypeObject;
+}

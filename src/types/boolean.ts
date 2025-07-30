@@ -59,4 +59,12 @@ class SchemaTypeBoolean extends SchemaType<boolean> {
   }
 }
 
+
+// For ESM compatibility
 export default SchemaTypeBoolean;
+if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
+  // For CommonJS compatibility
+  module.exports = SchemaTypeBoolean;
+  // For ESM compatibility
+  module.exports.default = SchemaTypeBoolean;
+}

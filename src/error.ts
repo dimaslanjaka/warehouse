@@ -21,4 +21,12 @@ class WarehouseError extends Error {
 
 WarehouseError.prototype.name = 'WarehouseError';
 
+
+// For ESM compatibility
 export default WarehouseError;
+if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
+  // For CommonJS compatibility
+  module.exports = WarehouseError;
+  // For ESM compatibility
+  module.exports.default = WarehouseError;
+}

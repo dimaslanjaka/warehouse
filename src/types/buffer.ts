@@ -108,4 +108,12 @@ class SchemaTypeBuffer extends SchemaType<Buffer> {
   }
 }
 
+
+// For ESM compatibility
 export default SchemaTypeBuffer;
+if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
+  // For CommonJS compatibility
+  module.exports = SchemaTypeBuffer;
+  // For ESM compatibility
+  module.exports.default = SchemaTypeBuffer;
+}

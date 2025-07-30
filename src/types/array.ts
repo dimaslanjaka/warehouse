@@ -386,4 +386,12 @@ SchemaTypeArray.prototype.u$append = SchemaTypeArray.prototype.u$push;
 
 SchemaTypeArray.prototype.u$prepend = SchemaTypeArray.prototype.u$unshift;
 
+
+// For ESM compatibility
 export default SchemaTypeArray;
+if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
+  // For CommonJS compatibility
+  module.exports = SchemaTypeArray;
+  // For ESM compatibility
+  module.exports.default = SchemaTypeArray;
+}

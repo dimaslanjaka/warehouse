@@ -785,4 +785,12 @@ class Schema<T = any> {
 
 Schema.prototype.Types = Types;
 
+
+// For ESM compatibility
 export default Schema;
+if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
+  // For CommonJS compatibility
+  module.exports = Schema;
+  // For ESM compatibility
+  module.exports.default = Schema;
+}

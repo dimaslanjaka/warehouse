@@ -1098,4 +1098,12 @@ Model.prototype.each = Model.prototype.forEach;
 
 Model.prototype.random = Model.prototype.shuffle;
 
+
+// For ESM compatibility
 export default Model;
+if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
+  // For CommonJS compatibility
+  module.exports = Model;
+  // For ESM compatibility
+  module.exports.default = Model;
+}
