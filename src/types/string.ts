@@ -99,4 +99,12 @@ class SchemaTypeString extends SchemaType<string> {
   }
 }
 
+
+// For ESM compatibility
 export default SchemaTypeString;
+if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
+  // For CommonJS compatibility
+  module.exports = SchemaTypeString;
+  // For ESM compatibility
+  module.exports.default = SchemaTypeString;
+}

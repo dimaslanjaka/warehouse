@@ -40,4 +40,12 @@ class SchemaTypeEnum extends SchemaType<any[]> {
   }
 }
 
+
+// For ESM compatibility
 export default SchemaTypeEnum;
+if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
+  // For CommonJS compatibility
+  module.exports = SchemaTypeEnum;
+  // For ESM compatibility
+  module.exports.default = SchemaTypeEnum;
+}

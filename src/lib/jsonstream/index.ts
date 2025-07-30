@@ -2,18 +2,20 @@ import through2 from 'through2';
 import Parser from 'jsonparse';
 
 /**
- * Check whether a x and y are equal, or x matches y, or x(y) is truthy.
- * @param {boolean | string | RegExp | (args: any[]) => boolean} x
- * @param {*} y
- * @returns {boolean}
+ * Check whether `x` and `y` are equal, or `x` matches `y`, or `x(y)` is truthy.
+ *
+ * @param x - A value to check. Can be a boolean, string, RegExp, or function.
+ * @param y - The value to compare against.
+ * @returns True if the condition is met, otherwise false.
  */
-const check = (x, y): boolean => {
+type CheckType = boolean | string | RegExp | ((args: any[]) => boolean);
+const check = (x: CheckType, y: any): boolean => {
   if (typeof x === 'string') {
     return y === x;
   }
 
-  if (x && typeof x.exec === 'function') {
-    return x.exec(y);
+  if (x instanceof RegExp) {
+    return !!x.exec(y);
   }
 
   if (typeof x === 'boolean' || typeof x === 'object') {
@@ -28,7 +30,7 @@ const check = (x, y): boolean => {
 };
 
 export function parse(path: string | any[], map = null) {
-  let header, footer;
+  let header: { [key: string]: any } | boolean, footer: { [key: string]: any } | boolean;
 
   const parser = new Parser();
   const stream = through2.obj(
@@ -90,7 +92,7 @@ export function parse(path: string | any[], map = null) {
     let emitPath = false;
     while (i < path.length) {
       const key = path[i];
-      let c;
+      let c: { key: any; [key: string]: any };
       j++;
 
       if (key && !key.recurse) {
@@ -189,7 +191,7 @@ export function parse(path: string | any[], map = null) {
 
   return stream;
 
-  function setHeaderFooter(key, value) {
+  function setHeaderFooter(key: string | number, value: any) {
     // header has not been emitted yet
     if (header !== false) {
       header = header || {};

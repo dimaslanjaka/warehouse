@@ -204,4 +204,11 @@ Database.prototype.Schema = Schema;
 Database.prototype.SchemaType = SchemaType;
 Database.version = __WAREHOUSE_VERSION__;
 
+// For ESM compatibility
 export default Database;
+if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
+  // For CommonJS compatibility
+  module.exports = Database;
+  // For ESM compatibility
+  module.exports.default = Database;
+}

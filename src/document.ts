@@ -108,4 +108,12 @@ function isGetter(obj: any, key: PropertyKey): any {
   return Object.getOwnPropertyDescriptor(obj, key).get;
 }
 
+
+// For ESM compatibility
 export default Document;
+if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
+  // For CommonJS compatibility
+  module.exports = Document;
+  // For ESM compatibility
+  module.exports.default = Document;
+}
