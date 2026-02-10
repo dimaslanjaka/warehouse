@@ -3,86 +3,9 @@
   "version": "6.0.0",
   "description": "Simple JSON-based database",
   "type": "module",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/types/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js",
-      "types": "./dist/types/index.d.ts"
-    },
-    "./dist/database": {
-      "import": "./dist/esm/database.js",
-      "require": "./dist/cjs/database.js",
-      "types": "./dist/types/database.d.ts"
-    },
-    "./dist/document": {
-      "import": "./dist/esm/document.js",
-      "require": "./dist/cjs/document.js",
-      "types": "./dist/types/document.d.ts"
-    },
-    "./dist/error": {
-      "import": "./dist/esm/error.js",
-      "require": "./dist/cjs/error.js",
-      "types": "./dist/types/error.d.ts"
-    },
-    "./dist/index": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js",
-      "types": "./dist/types/index.d.ts"
-    },
-    "./dist/lib": {
-      "import": "./dist/esm/lib",
-      "require": "./dist/cjs/lib",
-      "types": "./dist/types/lib"
-    },
-    "./dist/model": {
-      "import": "./dist/esm/model.js",
-      "require": "./dist/cjs/model.js",
-      "types": "./dist/types/model.d.ts"
-    },
-    "./dist/mutex": {
-      "import": "./dist/esm/mutex.js",
-      "require": "./dist/cjs/mutex.js",
-      "types": "./dist/types/mutex.d.ts"
-    },
-    "./dist/query": {
-      "import": "./dist/esm/query.js",
-      "require": "./dist/cjs/query.js",
-      "types": "./dist/types/query.d.ts"
-    },
-    "./dist/schema": {
-      "import": "./dist/esm/schema.js",
-      "require": "./dist/cjs/schema.js",
-      "types": "./dist/types/schema.d.ts"
-    },
-    "./dist/schematype": {
-      "import": "./dist/esm/schematype.js",
-      "require": "./dist/cjs/schematype.js",
-      "types": "./dist/types/schematype.d.ts"
-    },
-    "./dist/types": {
-      "import": "./dist/esm/types.js",
-      "require": "./dist/cjs/types.js",
-      "types": "./dist/types/types.d.ts"
-    },
-    "./dist/util": {
-      "import": "./dist/esm/util.js",
-      "require": "./dist/cjs/util.js",
-      "types": "./dist/types/util.d.ts"
-    },
-    "./package.json": "./package.json"
-  },
-  "typesVersions": {
-    "*": {
-      "dist/*": [
-        "dist/types/*",
-        "dist/esm/*",
-        "dist/cjs/*"
-      ]
-    }
-  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "directories": {
     "lib": "./dist"
   },
@@ -91,12 +14,10 @@
   ],
   "scripts": {
     "prepublishOnly": "npm install && npm run clean && npm run build",
-    "build-cjs": "tsc -p tsconfig.cjs.json",
-    "build-esm": "tsc -p tsconfig.esm.json",
-    "build-exports": "node scripts/build-exports.js",
+    "build-exports": "node scripts/build_exports.mjs",
     "build-types": "tsc -p tsconfig.types.json && node scripts/fix-dts-imports.js",
     "replace-version": "node scripts/replace-version.js",
-    "build": "npm run build-cjs && npm run build-esm && npm run replace-version && npm run build-exports && npm run build-types",
+    "build": "node build.js && npm run build-exports",
     "clean": "npx --yes rimraf dist tmp && npm run build",
     "eslint": "eslint src test",
     "test": "mocha --loader=ts-node/esm",
@@ -131,6 +52,7 @@
     "@types/node": "^22.7.4",
     "@types/sinon": "^17.0.3",
     "@types/through2": "^2.0.36",
+    "binary-collections": "^2.0.10",
     "c8": "^10.1.3",
     "chai": "^5.2.1",
     "chai-as-promised": "^8.0.1",
@@ -140,11 +62,155 @@
     "mocha": "^11.7.1",
     "sinon": "^19.0.2",
     "ts-node": "^10.9.2",
+    "tsup": "^8.5.1",
     "typedoc": "^0.27.2",
     "typedoc-plugin-rename-defaults": "^0.7.0",
     "typescript": "^5.8.3"
   },
   "engines": {
     "node": ">=18"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./dist/database": {
+      "import": "./dist/database.js",
+      "require": "./dist/database.cjs",
+      "types": "./dist/database.d.ts"
+    },
+    "./dist/document": {
+      "import": "./dist/document.js",
+      "require": "./dist/document.cjs",
+      "types": "./dist/document.d.ts"
+    },
+    "./dist/error": {
+      "import": "./dist/error.js",
+      "require": "./dist/error.cjs",
+      "types": "./dist/error.d.ts"
+    },
+    "./dist/error/population": {
+      "import": "./dist/error/population.js",
+      "require": "./dist/error/population.cjs",
+      "types": "./dist/error/population.d.ts"
+    },
+    "./dist/error/validation": {
+      "import": "./dist/error/validation.js",
+      "require": "./dist/error/validation.cjs",
+      "types": "./dist/error/validation.d.ts"
+    },
+    "./dist/index": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./dist/lib/jsonstream": {
+      "import": "./dist/lib/jsonstream/index.js",
+      "require": "./dist/lib/jsonstream/index.cjs",
+      "types": "./dist/lib/jsonstream/index.d.ts"
+    },
+    "./dist/lib/jsonstream/index": {
+      "import": "./dist/lib/jsonstream/index.js",
+      "require": "./dist/lib/jsonstream/index.cjs",
+      "types": "./dist/lib/jsonstream/index.d.ts"
+    },
+    "./dist/model": {
+      "import": "./dist/model.js",
+      "require": "./dist/model.cjs",
+      "types": "./dist/model.d.ts"
+    },
+    "./dist/mutex": {
+      "import": "./dist/mutex.js",
+      "require": "./dist/mutex.cjs",
+      "types": "./dist/mutex.d.ts"
+    },
+    "./dist/query": {
+      "import": "./dist/query.js",
+      "require": "./dist/query.cjs",
+      "types": "./dist/query.d.ts"
+    },
+    "./dist/schema": {
+      "import": "./dist/schema.js",
+      "require": "./dist/schema.cjs",
+      "types": "./dist/schema.d.ts"
+    },
+    "./dist/schematype": {
+      "import": "./dist/schematype.js",
+      "require": "./dist/schematype.cjs",
+      "types": "./dist/schematype.d.ts"
+    },
+    "./dist/types": {
+      "import": "./dist/types.js",
+      "require": "./dist/types.cjs",
+      "types": "./dist/types.d.ts"
+    },
+    "./dist/types/array": {
+      "import": "./dist/types/array.js",
+      "require": "./dist/types/array.cjs",
+      "types": "./dist/types/array.d.ts"
+    },
+    "./dist/types/boolean": {
+      "import": "./dist/types/boolean.js",
+      "require": "./dist/types/boolean.cjs",
+      "types": "./dist/types/boolean.d.ts"
+    },
+    "./dist/types/buffer": {
+      "import": "./dist/types/buffer.js",
+      "require": "./dist/types/buffer.cjs",
+      "types": "./dist/types/buffer.d.ts"
+    },
+    "./dist/types/cuid": {
+      "import": "./dist/types/cuid.js",
+      "require": "./dist/types/cuid.cjs",
+      "types": "./dist/types/cuid.d.ts"
+    },
+    "./dist/types/date": {
+      "import": "./dist/types/date.js",
+      "require": "./dist/types/date.cjs",
+      "types": "./dist/types/date.d.ts"
+    },
+    "./dist/types/enum": {
+      "import": "./dist/types/enum.js",
+      "require": "./dist/types/enum.cjs",
+      "types": "./dist/types/enum.d.ts"
+    },
+    "./dist/types/index": {
+      "import": "./dist/types/index.js",
+      "require": "./dist/types/index.cjs",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./dist/types/integer": {
+      "import": "./dist/types/integer.js",
+      "require": "./dist/types/integer.cjs",
+      "types": "./dist/types/integer.d.ts"
+    },
+    "./dist/types/number": {
+      "import": "./dist/types/number.js",
+      "require": "./dist/types/number.cjs",
+      "types": "./dist/types/number.d.ts"
+    },
+    "./dist/types/object": {
+      "import": "./dist/types/object.js",
+      "require": "./dist/types/object.cjs",
+      "types": "./dist/types/object.d.ts"
+    },
+    "./dist/types/string": {
+      "import": "./dist/types/string.js",
+      "require": "./dist/types/string.cjs",
+      "types": "./dist/types/string.d.ts"
+    },
+    "./dist/types/virtual": {
+      "import": "./dist/types/virtual.js",
+      "require": "./dist/types/virtual.cjs",
+      "types": "./dist/types/virtual.d.ts"
+    },
+    "./dist/util": {
+      "import": "./dist/util.js",
+      "require": "./dist/util.cjs",
+      "types": "./dist/util.d.ts"
+    },
+    "./package.json": "./package.json"
   }
 }

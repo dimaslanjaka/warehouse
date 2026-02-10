@@ -3,7 +3,7 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -11,13 +11,6 @@
     "outDir": "tmp/dist",
     "types": ["node", "mocha"]
   },
-  "include": [
-    "./src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "tmp",
-    "dist",
-    "coverage",
-  ]
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules", "tmp", "dist", "coverage"]
 }
