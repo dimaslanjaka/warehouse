@@ -1,6 +1,6 @@
 import { parse as createJsonParseStream } from './lib/jsonstream';
 import BluebirdPromise from 'bluebird';
-import { createReadStream, createWriteStream } from 'graceful-fs';
+import fs from 'graceful-fs';
 import { pipeline, Stream } from 'stream';
 import Model from './model';
 import Schema from './schema';
@@ -15,7 +15,7 @@ const pkg = require('../package.json');
 const pipelineAsync = BluebirdPromise.promisify(pipeline) as unknown as (...args: Stream[]) => BluebirdPromise<unknown>;
 
 async function exportAsync(database: Database, path: string): Promise<void> {
-  const writeStream = createWriteStream(path, { flags: 'w' });
+  const writeStream = fs.createWriteStream(path, { flags: 'w' });
 
   try {
     let p: Promise<unknown> | undefined;
@@ -146,7 +146,7 @@ class Database {
       this.model(data.key)._import(data.value);
     });
 
-    const rs = createReadStream(path, 'utf8');
+    const rs = fs.createReadStream(path, 'utf8');
 
     return pipelineAsync(rs, parseStream).then(() => {
       if (newVersion > oldVersion) {
