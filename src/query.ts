@@ -211,8 +211,49 @@ abstract class Query<T> {
   sort(orderby: string, order: 'desc' | number | Record<string, any>): Query<T>;
   sort(orderby: string): Query<T>;
   sort(orderby: Record<string, number | Record<string, any>>): Query<T>;
-  sort(orderby: string | Record<string, number | Record<string, any>>, order?: 'desc' | number | Record<string, any>): Query<T> {
+  sort(
+    orderby: string | Record<string, number | Record<string, any>>,
+    order?: 'desc' | number | Record<string, any>
+  ): Query<T> {
     const sort = parseArgs(orderby, order);
+    if (!this._schema) {
+      try {
+        const proto = Object.getPrototypeOf(this);
+        console.error('Query.sort: _schema is missing', {
+          constructor: this && this.constructor && this.constructor.name,
+          instanceHasSchema: Object.prototype.hasOwnProperty.call(this, '_schema'),
+          protoHasSchema: proto && Object.prototype.hasOwnProperty.call(proto, '_schema'),
+          protoSchemaValue: proto && (proto as any)._schema,
+          instanceSchemaValue: (this as any)._schema,
+          instanceModelValue: (this as any)._model,
+          protoKeys: proto ? Object.getOwnPropertyNames(proto).slice(0, 50) : [],
+          instanceKeys: Object.keys(this).slice(0, 50),
+          dataLength: this.data ? this.data.length : 0,
+          sampleData: this.data ? this.data.slice(0, 3) : []
+        });
+      } catch (e) {
+        console.error('Query.sort: failed to log diagnostics', e);
+      }
+    } else if (!this._schema._execSort) {
+      try {
+        const proto = Object.getPrototypeOf(this);
+        console.error('Query.sort: _schema._execSort is missing', {
+          constructor: this && this.constructor && this.constructor.name,
+          schema: this._schema,
+          schemaKeys: this._schema ? Object.getOwnPropertyNames(this._schema).slice(0, 50) : [],
+          protoHasSchema: proto && Object.prototype.hasOwnProperty.call(proto, '_schema'),
+          protoSchemaValue: proto && (proto as any)._schema,
+          instanceSchemaValue: (this as any)._schema,
+          instanceModelValue: (this as any)._model,
+          protoKeys: proto ? Object.getOwnPropertyNames(proto).slice(0, 50) : [],
+          instanceKeys: Object.keys(this).slice(0, 50),
+          dataLength: this.data ? this.data.length : 0,
+          sampleData: this.data ? this.data.slice(0, 3) : []
+        });
+      } catch (e) {
+        console.error('Query.sort: failed to log _execSort diagnostics', e);
+      }
+    }
     const fn = this._schema._execSort(sort);
 
     return Reflect.construct(this.constructor, [this.data.slice().sort(fn)]);
@@ -353,7 +394,7 @@ abstract class Query<T> {
     const model = this._model;
     const stack = this._schema._parseUpdate(data);
 
-    return BluebirdPromise.mapSeries(this.data, item => model._updateWithStack(item._id, stack)).asCallback(callback);
+    return BluebirdPromise.mapSeries(this.data, (item) => model._updateWithStack(item._id, stack)).asCallback(callback);
   }
 
   /**
@@ -366,7 +407,7 @@ abstract class Query<T> {
   replace(data: Document<T> | T, callback?: NodeJSLikeCallback<any>): BluebirdPromise<any> {
     const model = this._model;
 
-    return BluebirdPromise.map(this.data, item => model.replaceById(item._id, data)).asCallback(callback);
+    return BluebirdPromise.map(this.data, (item) => model.replaceById(item._id, data)).asCallback(callback);
   }
 
   /**
@@ -378,7 +419,7 @@ abstract class Query<T> {
   remove(callback?: NodeJSLikeCallback<any>): BluebirdPromise<any> {
     const model = this._model;
 
-    return BluebirdPromise.mapSeries(this.data, item => model.removeById(item._id)).asCallback(callback);
+    return BluebirdPromise.mapSeries(this.data, (item) => model.removeById(item._id)).asCallback(callback);
   }
 
   /**

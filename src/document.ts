@@ -2,6 +2,7 @@ import rfdc from 'rfdc';
 import type Model from './model';
 import type Schema from './schema';
 import type BluebirdPromise from 'bluebird';
+import Promise from 'bluebird';
 import type { NodeJSLikeCallback, Options } from './types';
 const cloneDeep = rfdc();
 
@@ -9,7 +10,7 @@ abstract class Document<T> {
   abstract _model: Model<T>;
   _id!: string;
   abstract _schema: Schema<T>;
-  [key : string]: any;
+  [key: string]: any;
 
   /**
    * Document constructor.
@@ -29,6 +30,27 @@ abstract class Document<T> {
    * @return {BluebirdPromise}
    */
   save(callback?: NodeJSLikeCallback<any>): BluebirdPromise<any> {
+    if (!this._model) {
+      try {
+        const proto = Object.getPrototypeOf(this);
+        console.error('Document.save: _model is missing', {
+          constructor: this && this.constructor && this.constructor.name,
+          instanceHasModel: Object.prototype.hasOwnProperty.call(this, '_model'),
+          protoHasModel: proto && Object.prototype.hasOwnProperty.call(proto, '_model'),
+          protoModelValue: proto && (proto as any)._model,
+          instanceModelValue: (this as any)._model,
+          instanceModelHasSave: Boolean((this as any)._model && (this as any)._model.save),
+          instanceModelSaveType: typeof ((this as any)._model && (this as any)._model.save),
+          instanceModelEqualsProto: proto && (proto as any)._model === (this as any)._model,
+          protoKeys: proto ? Object.getOwnPropertyNames(proto).slice(0, 50) : [],
+          instanceKeys: Object.keys(this).slice(0, 50)
+        });
+      } catch (e) {
+        console.error('Document.save: failed to log diagnostics', e);
+      }
+      return Promise.resolve();
+    }
+
     return this._model.save(this, callback);
   }
 

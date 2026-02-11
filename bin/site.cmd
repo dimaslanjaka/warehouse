@@ -1,0 +1,1 @@
+yarn workspace hexo-site exec "hexo generate --verbose --debug" > hexo.log 2>&1

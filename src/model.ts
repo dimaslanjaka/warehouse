@@ -19,10 +19,10 @@ class Model<T> extends EventEmitter {
   data: Record<PropertyKey, T> = {};
   schema: Schema<T>;
   length = 0;
-  Document: { new<T>(data: T): Document<T> };
-  Query: { new<T>(data: Document<T>[]): Query<T> };
+  Document: { new <T>(data: T): Document<T> };
+  Query: { new <T>(data: Document<T>[]): Query<T> };
   _database: Database;
-  [key : string]: any;
+  [key: string]: any;
 
   _dataKeys: string[] = [];
   dirty = false;
@@ -33,7 +33,10 @@ class Model<T> extends EventEmitter {
    * @param {string} name Model name
    * @param {Schema|object} [schema_] Schema
    */
-  constructor(public name: string, schema_: Schema<T> | Record<string, AddSchemaTypeOptions>) {
+  constructor(
+    public name: string,
+    schema_: Schema<T> | Record<string, AddSchemaTypeOptions>
+  ) {
     super();
 
     let schema: Schema<T>;
@@ -49,7 +52,7 @@ class Model<T> extends EventEmitter {
 
     // Set `_id` path for schema
     if (!schema.path('_id')) {
-      schema.path('_id', {type: Types.CUID, required: true});
+      schema.path('_id', { type: Types.CUID, required: true });
     }
 
     this.schema = schema;
@@ -125,9 +128,12 @@ class Model<T> extends EventEmitter {
     const raw = this.data[id];
     if (!raw) return;
 
-    const options = Object.assign({
-      lean: false
-    }, options_);
+    const options = Object.assign(
+      {
+        lean: false
+      },
+      options_
+    );
 
     const data = cloneDeep(raw);
     return options.lean ? data : this.new(data);
@@ -161,10 +167,7 @@ class Model<T> extends EventEmitter {
 
   /**
    * Inserts a document.
-   *
-   * @param {Document|object} data
    * @return {BluebirdPromise}
-   * @private
    */
   _insertOne(data_: Document<T> | T): BluebirdPromise<any> {
     const schema = this.schema;
@@ -187,7 +190,7 @@ class Model<T> extends EventEmitter {
     schema._applySetters(result);
 
     // Pre-hooks
-    return execHooks(schema, 'pre', 'save', data).then(data => {
+    return execHooks(schema, 'pre', 'save', data).then((data) => {
       // Insert data
       this.dirty = true;
       this.data[id] = result;
@@ -218,7 +221,7 @@ class Model<T> extends EventEmitter {
    */
   insert(data: Document<T> | T | Document<T>[] | T[], callback?: NodeJSLikeCallback<any>): BluebirdPromise<any> {
     if (Array.isArray(data)) {
-      return BluebirdPromise.mapSeries<Document<T> | T, any>(data, item => this.insertOne(item)).asCallback(callback);
+      return BluebirdPromise.mapSeries<Document<T> | T, any>(data, (item) => this.insertOne(item)).asCallback(callback);
     }
 
     return this.insertOne(data, callback);
@@ -278,7 +281,7 @@ class Model<T> extends EventEmitter {
     schema._applySetters(result as object);
 
     // Pre-hooks
-    return execHooks(schema, 'pre', 'save', doc).then(data => {
+    return execHooks(schema, 'pre', 'save', doc).then((data) => {
       // Update data
       this.dirty = true;
       this.data[id] = result;
@@ -340,7 +343,7 @@ class Model<T> extends EventEmitter {
     schema._applySetters(result);
 
     // Pre-hooks
-    return execHooks(schema, 'pre', 'save', data).then(data => {
+    return execHooks(schema, 'pre', 'save', data).then((data) => {
       // Replace data
       this.dirty = true;
       this.data[id] = result;
@@ -391,7 +394,7 @@ class Model<T> extends EventEmitter {
     }
 
     // Pre-hooks
-    return execHooks(schema, 'pre', 'remove', data).then(data => {
+    return execHooks(schema, 'pre', 'remove', data).then((data) => {
       // Remove data
       this.dirty = true;
       this.data[id] = null;
@@ -448,10 +451,22 @@ class Model<T> extends EventEmitter {
    */
   forEach(iterator: (value: Document<T>, index: number) => void): void;
   forEach(iterator: (value: T, index: number) => void, options: Partial<Omit<Options, 'lean'>> & { lean: true }): void;
-  forEach(iterator: (value: Document<T>, index: number) => void, options: Partial<Omit<Options, 'lean'>> & { lean: false }): void;
-  forEach(iterator: (value: Document<T>, index: number) => void, options: Partial<Omit<Options, 'lean'>> & { lean?: undefined }): void;
-  forEach(iterator: ((value: T, index: number) => void) | ((value: Document<T>, index: number) => void), options: Partial<Options>): void;
-  forEach(iterator: ((value: T, index: number) => void) | ((value: Document<T>, index: number) => void), options?: Partial<Options>): void {
+  forEach(
+    iterator: (value: Document<T>, index: number) => void,
+    options: Partial<Omit<Options, 'lean'>> & { lean: false }
+  ): void;
+  forEach(
+    iterator: (value: Document<T>, index: number) => void,
+    options: Partial<Omit<Options, 'lean'>> & { lean?: undefined }
+  ): void;
+  forEach(
+    iterator: ((value: T, index: number) => void) | ((value: Document<T>, index: number) => void),
+    options: Partial<Options>
+  ): void;
+  forEach(
+    iterator: ((value: T, index: number) => void) | ((value: Document<T>, index: number) => void),
+    options?: Partial<Options>
+  ): void {
     const keys = this.dataKeys;
     let num = 0;
 
@@ -520,7 +535,7 @@ class Model<T> extends EventEmitter {
       }
     }
 
-    return options.lean ? arr as T[] : new this.Query(arr as Document<T>[]);
+    return options.lean ? (arr as T[]) : new this.Query(arr as Document<T>[]);
   }
 
   /**
@@ -536,8 +551,8 @@ class Model<T> extends EventEmitter {
   findOne(query: object, options_: Partial<Omit<Options, 'lean'>> & { lean: true }): T;
   findOne(query: object, options_: Partial<Omit<Options, 'lean'>> & { lean: false }): Document<T>;
   findOne(query: object, options_: Partial<Omit<Options, 'lean'>> & { lean?: undefined }): Document<T>;
-  findOne(query: object, options_ : Partial<Options>): Document<T> | T;
-  findOne(query: object, options_ : Partial<Options> = {}): Document<T> | T {
+  findOne(query: object, options_: Partial<Options>): Document<T> | T;
+  findOne(query: object, options_: Partial<Options> = {}): Document<T> | T {
     const options = Object.assign(options_, { limit: 1 });
 
     const result = this.find(query, options);
@@ -554,7 +569,10 @@ class Model<T> extends EventEmitter {
   sort(orderby: string, order: 'desc' | number | Record<string, any>): Query<T>;
   sort(orderby: string): Query<T>;
   sort(orderby: Record<string, number | Record<string, any>>): Query<T>;
-  sort(orderby: string | Record<string, number | Record<string, any>>, order?: 'desc' | number | Record<string, any>): Query<T> {
+  sort(
+    orderby: string | Record<string, number | Record<string, any>>,
+    order?: 'desc' | number | Record<string, any>
+  ): Query<T> {
     const sort = parseArgs(orderby, order);
     const fn = this.schema._execSort(sort);
 
@@ -710,10 +728,22 @@ class Model<T> extends EventEmitter {
    */
   map<R>(iterator: (value: Document<T>, index: number) => R): R[];
   map<R>(iterator: (value: T, index: number) => R, options: Partial<Omit<Options, 'lean'>> & { lean: true }): R[];
-  map<R>(iterator: (value: Document<T>, index: number) => R, options: Partial<Omit<Options, 'lean'>> & { lean: false }): R[];
-  map<R>(iterator: (value: Document<T>, index: number) => R, options: Partial<Omit<Options, 'lean'>> & { lean?: undefined }): R[];
-  map<R>(iterator: ((value: T, index: number) => R) | ((value: Document<T>, index: number) => R), options: Partial<Options>): R[];
-  map<R>(iterator: ((value: T, index: number) => R) | ((value: Document<T>, index: number) => R), options?: Partial<Options>): R[] {
+  map<R>(
+    iterator: (value: Document<T>, index: number) => R,
+    options: Partial<Omit<Options, 'lean'>> & { lean: false }
+  ): R[];
+  map<R>(
+    iterator: (value: Document<T>, index: number) => R,
+    options: Partial<Omit<Options, 'lean'>> & { lean?: undefined }
+  ): R[];
+  map<R>(
+    iterator: ((value: T, index: number) => R) | ((value: Document<T>, index: number) => R),
+    options: Partial<Options>
+  ): R[];
+  map<R>(
+    iterator: ((value: T, index: number) => R) | ((value: Document<T>, index: number) => R),
+    options?: Partial<Options>
+  ): R[] {
     const result = new Array(this.length);
     const keys = this.dataKeys;
     const len = keys.length;
@@ -794,11 +824,26 @@ class Model<T> extends EventEmitter {
    * @return {Query}
    */
   filter(iterator: (value: Document<T>, index: number) => boolean): Query<T>;
-  filter(iterator: (value: T, index: number) => boolean, options: Partial<Omit<Options, 'lean'>> & { lean: true }): Query<T>;
-  filter(iterator: (value: Document<T>, index: number) => boolean, options: Partial<Omit<Options, 'lean'>> & { lean: false }): Query<T>;
-  filter(iterator: (value: Document<T>, index: number) => boolean, options: Partial<Omit<Options, 'lean'>> & { lean?: undefined }): Query<T>;
-  filter(iterator: ((value: T, index: number) => boolean) | ((value: Document<T>, index: number) => boolean), options: Partial<Options>): Query<T>;
-  filter(iterator: ((value: T, index: number) => boolean) | ((value: Document<T>, index: number) => boolean), options?: Partial<Options>): Query<T> {
+  filter(
+    iterator: (value: T, index: number) => boolean,
+    options: Partial<Omit<Options, 'lean'>> & { lean: true }
+  ): Query<T>;
+  filter(
+    iterator: (value: Document<T>, index: number) => boolean,
+    options: Partial<Omit<Options, 'lean'>> & { lean: false }
+  ): Query<T>;
+  filter(
+    iterator: (value: Document<T>, index: number) => boolean,
+    options: Partial<Omit<Options, 'lean'>> & { lean?: undefined }
+  ): Query<T>;
+  filter(
+    iterator: ((value: T, index: number) => boolean) | ((value: Document<T>, index: number) => boolean),
+    options: Partial<Options>
+  ): Query<T>;
+  filter(
+    iterator: ((value: T, index: number) => boolean) | ((value: Document<T>, index: number) => boolean),
+    options?: Partial<Options>
+  ): Query<T> {
     const arr = [];
 
     this.forEach((item: any, i: number) => {
@@ -1023,7 +1068,10 @@ class Model<T> extends EventEmitter {
       const raw = data[keys[i]];
       if (raw) {
         const prefix = i === 0 ? '' : ',';
-        p = asyncWriteToStream(writeStream, `${prefix}${JSON.stringify(schema._exportDatabase(cloneDeep(raw) as object))}`);
+        p = asyncWriteToStream(
+          writeStream,
+          `${prefix}${JSON.stringify(schema._exportDatabase(cloneDeep(raw) as object))}`
+        );
         if (p) await p;
       }
     }
@@ -1053,11 +1101,16 @@ class Model<T> extends EventEmitter {
 
 Model.prototype.get = Model.prototype.findById;
 
-function execHooks<T>(schema: Schema<T>, type: keyof Schema['hooks'], event: keyof Schema['hooks'][keyof Schema['hooks']], data: any): BluebirdPromise<any> {
+function execHooks<T>(
+  schema: Schema<T>,
+  type: keyof Schema['hooks'],
+  event: keyof Schema['hooks'][keyof Schema['hooks']],
+  data: any
+): BluebirdPromise<any> {
   const hooks = schema.hooks[type][event];
   if (!hooks.length) return BluebirdPromise.resolve(data);
 
-  return BluebirdPromise.each(hooks, hook => hook(data)).thenReturn(data);
+  return BluebirdPromise.each(hooks, (hook) => hook(data)).thenReturn(data);
 }
 
 Model.prototype.size = Model.prototype.count;
