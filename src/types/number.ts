@@ -1,5 +1,5 @@
-import SchemaType from '../schematype.js';
-import ValidationError from '../error/validation.js';
+import SchemaType from '../schematype';
+import ValidationError from '../error/validation';
 
 /**
  * Number schema type.
@@ -118,12 +118,4 @@ class SchemaTypeNumber extends SchemaType<number> {
   }
 }
 
-
-// For ESM compatibility
 export default SchemaTypeNumber;
-if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
-  // For CommonJS compatibility
-  module.exports = SchemaTypeNumber;
-  // For ESM compatibility
-  module.exports.default = SchemaTypeNumber;
-}

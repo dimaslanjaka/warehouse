@@ -1,5 +1,5 @@
-import SchemaType from '../schematype.js';
-import ValidationError from '../error/validation.js';
+import SchemaType from '../schematype';
+import ValidationError from '../error/validation';
 
 const { isArray } = Array;
 
@@ -7,7 +7,7 @@ const { isArray } = Array;
  * Array schema type.
  */
 class SchemaTypeArray<I, T extends SchemaType<I>> extends SchemaType<I[]> {
-  declare options: SchemaType<I[]>['options'] & { child?: T; };
+  declare options: SchemaType<I[]>['options'] & { child?: T };
   child: T;
 
   /**
@@ -18,12 +18,18 @@ class SchemaTypeArray<I, T extends SchemaType<I>> extends SchemaType<I[]> {
    *   @param {Array|Function} [options.default=[]]
    *   @param {SchemaType} [options.child]
    */
-  constructor(name: string, options?: Partial<SchemaType<I[]>['options']> & { child?: T; }) {
-    super(name, Object.assign({
-      default: []
-    }, options));
+  constructor(name: string, options?: Partial<SchemaType<I[]>['options']> & { child?: T }) {
+    super(
+      name,
+      Object.assign(
+        {
+          default: []
+        },
+        options
+      )
+    );
 
-    this.child = this.options.child || new SchemaType<any>(name) as T;
+    this.child = this.options.child || (new SchemaType<any>(name) as T);
   }
 
   /**
@@ -39,7 +45,7 @@ class SchemaTypeArray<I, T extends SchemaType<I>> extends SchemaType<I[]> {
     value_ = super.cast(value_, data);
     if (value_ == null) return value_ as undefined;
 
-    const value = isArray(value_) ? value_ : value_ = [value_];
+    const value = isArray(value_) ? value_ : (value_ = [value_]);
     if (!value.length) return value;
 
     const child = this.child;
@@ -134,7 +140,7 @@ class SchemaTypeArray<I, T extends SchemaType<I>> extends SchemaType<I[]> {
    * @param {Object} data
    * @return {Array}
    */
-  value(value: unknown[], data?: unknown): any[]
+  value(value: unknown[], data?: unknown): any[];
   value(): undefined;
   value(value?: unknown[], data?: unknown): any[] | undefined {
     if (!value) return value as undefined;
@@ -299,10 +305,10 @@ class SchemaTypeArray<I, T extends SchemaType<I>> extends SchemaType<I[]> {
     if (!value) return value;
 
     if (isArray(update)) {
-      return value.filter(item => !update.includes(item));
+      return value.filter((item) => !update.includes(item));
     }
 
-    return value.filter(item => item !== update);
+    return value.filter((item) => item !== update);
   }
 
   /**
@@ -386,12 +392,4 @@ SchemaTypeArray.prototype.u$append = SchemaTypeArray.prototype.u$push;
 
 SchemaTypeArray.prototype.u$prepend = SchemaTypeArray.prototype.u$unshift;
 
-
-// For ESM compatibility
 export default SchemaTypeArray;
-if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
-  // For CommonJS compatibility
-  module.exports = SchemaTypeArray;
-  // For ESM compatibility
-  module.exports.default = SchemaTypeArray;
-}

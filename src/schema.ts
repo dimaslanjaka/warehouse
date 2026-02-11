@@ -1,13 +1,13 @@
-import SchemaType from './schematype.js';
-import * as Types from './types/index.js';
+import SchemaType from './schematype';
+import * as Types from './types/index';
 import BluebirdPromise from 'bluebird';
-import { getProp, setProp, delProp } from './util.js';
-import PopulationError from './error/population.js';
-import SchemaTypeVirtual from './types/virtual.js';
+import { getProp, setProp, delProp } from './util';
+import PopulationError from './error/population';
+import SchemaTypeVirtual from './types/virtual';
 import { isPlainObject } from 'is-plain-object';
-import type { AddSchemaTypeLoopOptions, AddSchemaTypeOptions, AddSchemaTypeSimpleOptions, Options, queryCallback, queryFilterCallback, queryParseCallback, SchemaTypeOptions } from './types.js';
-import type Model from './model.js';
-import type Document from './document.js';
+import type { AddSchemaTypeLoopOptions, AddSchemaTypeOptions, AddSchemaTypeSimpleOptions, Options, queryCallback, queryFilterCallback, queryParseCallback, SchemaTypeOptions } from './types';
+import type Model from './model';
+import type Document from './document';
 
 const builtinTypes = new Set(['String', 'Number', 'Boolean', 'Array', 'Object', 'Date', 'Buffer']);
 
@@ -785,12 +785,4 @@ class Schema<T = any> {
 
 Schema.prototype.Types = Types;
 
-
-// For ESM compatibility
 export default Schema;
-if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
-  // For CommonJS compatibility
-  module.exports = Schema;
-  // For ESM compatibility
-  module.exports.default = Schema;
-}

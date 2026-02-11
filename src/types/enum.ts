@@ -1,5 +1,5 @@
-import SchemaType from '../schematype.js';
-import ValidationError from '../error/validation.js';
+import SchemaType from '../schematype';
+import ValidationError from '../error/validation';
 
 /**
  * Enum schema type.
@@ -16,9 +16,15 @@ class SchemaTypeEnum extends SchemaType<any[]> {
    *   @param {*} [options.default]
    */
   constructor(name: string, options?: Partial<SchemaType<any[]>['options']> & { elements?: any[] }) {
-    super(name, Object.assign({
-      elements: []
-    }, options));
+    super(
+      name,
+      Object.assign(
+        {
+          elements: []
+        },
+        options
+      )
+    );
   }
 
   /**
@@ -40,12 +46,4 @@ class SchemaTypeEnum extends SchemaType<any[]> {
   }
 }
 
-
-// For ESM compatibility
 export default SchemaTypeEnum;
-if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
-  // For CommonJS compatibility
-  module.exports = SchemaTypeEnum;
-  // For ESM compatibility
-  module.exports.default = SchemaTypeEnum;
-}

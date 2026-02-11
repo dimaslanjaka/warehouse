@@ -1,5 +1,5 @@
-import SchemaTypeNumber from './number.js';
-import ValidationError from '../error/validation.js';
+import SchemaTypeNumber from './number';
+import ValidationError from '../error/validation';
 
 /**
  * Integer schema type.
@@ -37,12 +37,4 @@ class SchemaTypeInteger extends SchemaTypeNumber {
   }
 }
 
-
-// For ESM compatibility
 export default SchemaTypeInteger;
-if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
-  // For CommonJS compatibility
-  module.exports = SchemaTypeInteger;
-  // For ESM compatibility
-  module.exports.default = SchemaTypeInteger;
-}

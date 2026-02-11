@@ -1,8 +1,8 @@
 import rfdc from 'rfdc';
-import type Model from './model.js';
-import type Schema from './schema.js';
+import type Model from './model';
+import type Schema from './schema';
 import type BluebirdPromise from 'bluebird';
-import type { NodeJSLikeCallback, Options } from './types.js';
+import type { NodeJSLikeCallback, Options } from './types';
 const cloneDeep = rfdc();
 
 abstract class Document<T> {
@@ -14,7 +14,7 @@ abstract class Document<T> {
   /**
    * Document constructor.
    *
-   * @param data
+   * @param {object} data
    */
   constructor(data?: T) {
     if (data) {
@@ -67,7 +67,7 @@ abstract class Document<T> {
   /**
    * Returns a plain JavaScript object.
    *
-   * @return
+   * @return {object}
    */
   toObject(): T extends object ? T : never {
     const keys = Object.keys(this);
@@ -86,7 +86,7 @@ abstract class Document<T> {
   /**
    * Returns a string representing the document.
    *
-   * @return
+   * @return {String}
    */
   toString(): string {
     return JSON.stringify(this);
@@ -95,8 +95,8 @@ abstract class Document<T> {
   /**
    * Populates document references.
    *
-   * @param expr
-   * @return
+   * @param {String|Object} expr
+   * @return {Document}
    */
   populate(expr: string | string[] | Partial<Options>[] | Partial<Options>): Document<T> {
     const stack = this._schema._parsePopulate(expr);
@@ -108,12 +108,4 @@ function isGetter(obj: any, key: PropertyKey): any {
   return Object.getOwnPropertyDescriptor(obj, key).get;
 }
 
-
-// For ESM compatibility
 export default Document;
-if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
-  // For CommonJS compatibility
-  module.exports = Document;
-  // For ESM compatibility
-  module.exports.default = Document;
-}

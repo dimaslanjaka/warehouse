@@ -1,5 +1,5 @@
-import SchemaType from '../schematype.js';
-import ValidationError from '../error/validation.js';
+import SchemaType from '../schematype';
+import ValidationError from '../error/validation';
 
 /**
  * Date schema type.
@@ -149,12 +149,4 @@ class SchemaTypeDate extends SchemaType<Date> {
   }
 }
 
-
-// For ESM compatibility
 export default SchemaTypeDate;
-if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
-  // For CommonJS compatibility
-  module.exports = SchemaTypeDate;
-  // For ESM compatibility
-  module.exports.default = SchemaTypeDate;
-}

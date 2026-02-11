@@ -1,5 +1,5 @@
-import SchemaType from '../schematype.js';
-import ValidationError from '../error/validation.js';
+import SchemaType from '../schematype';
+import ValidationError from '../error/validation';
 
 /**
  * Boolean schema type.
@@ -59,12 +59,4 @@ class SchemaTypeBoolean extends SchemaType<boolean> {
   }
 }
 
-
-// For ESM compatibility
 export default SchemaTypeBoolean;
-if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
-  // For CommonJS compatibility
-  module.exports = SchemaTypeBoolean;
-  // For ESM compatibility
-  module.exports.default = SchemaTypeBoolean;
-}

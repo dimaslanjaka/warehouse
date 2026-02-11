@@ -1,5 +1,5 @@
-import SchemaType from '../schematype.js';
-import { setGetter } from '../util.js';
+import SchemaType from '../schematype';
+import { setGetter } from '../util';
 
 /**
  * Virtual schema type.
@@ -77,12 +77,4 @@ class SchemaTypeVirtual<T = any> extends SchemaType<any> {
   }
 }
 
-
-// For ESM compatibility
 export default SchemaTypeVirtual;
-if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
-  // For CommonJS compatibility
-  module.exports = SchemaTypeVirtual;
-  // For ESM compatibility
-  module.exports.default = SchemaTypeVirtual;
-}

@@ -1,34 +1,29 @@
+import { parse as createJsonParseStream } from './lib/jsonstream';
 import BluebirdPromise from 'bluebird';
-import fs from 'graceful-fs';
-import { logger } from 'hexo-log';
+import { createReadStream, createWriteStream } from 'graceful-fs';
 import { pipeline, Stream } from 'stream';
-import WarehouseError from './error.js';
-import { parse as createJsonParseStream } from './lib/jsonstream/index.js';
-import Model from './model.js';
-import Schema from './schema.js';
-import SchemaType from './schematype.js';
-import type { AddSchemaTypeOptions, NodeJSLikeCallback } from './types.js';
-import { asyncWriteToStream } from './util.js';
-
-// Use a unique placeholder for version, to be replaced after build
-const __WAREHOUSE_VERSION__ = '__WAREHOUSE_VERSION_UNIQUE_2A1B3C4D5E6F__';
+import Model from './model';
+import Schema from './schema';
+import SchemaType from './schematype';
+import WarehouseError from './error';
+import { logger } from 'hexo-log';
+import type { AddSchemaTypeOptions, NodeJSLikeCallback } from './types';
+import { asyncWriteToStream } from './util';
 
 const log = logger();
+const pkg = require('../package.json');
 const pipelineAsync = BluebirdPromise.promisify(pipeline) as unknown as (...args: Stream[]) => BluebirdPromise<unknown>;
 
 async function exportAsync(database: Database, path: string): Promise<void> {
-  const writeStream = fs.createWriteStream(path, { flags: 'w' });
+  const writeStream = createWriteStream(path, { flags: 'w' });
 
   try {
     let p: Promise<unknown> | undefined;
     // Start body & Meta & Start models
-    p = asyncWriteToStream(
-      writeStream,
-      `{"meta":${JSON.stringify({
-        version: database.options.version,
-        warehouse: __WAREHOUSE_VERSION__
-      })},"models":{`
-    );
+    p = asyncWriteToStream(writeStream, `{"meta":${JSON.stringify({
+      version: database.options.version,
+      warehouse: pkg.version
+    })},"models":{`);
     if (p) await p;
 
     const models = database._models;
@@ -66,10 +61,10 @@ async function exportAsync(database: Database, path: string): Promise<void> {
 }
 
 interface DatabaseOptions {
-  version: number;
-  path: string;
-  onUpgrade: (oldVersion: number, newVersion: number) => any;
-  onDowngrade: (oldVersion: number, newVersion: number) => any;
+  version: number,
+  path: string,
+  onUpgrade: (oldVersion: number, newVersion: number) => any,
+  onDowngrade: (oldVersion: number, newVersion: number) => any
 }
 
 class Database {
@@ -119,7 +114,6 @@ class Database {
 
     this._models[name] = new this.Model(name, schema);
     const model = this._models[name];
-    model._database = this;
     return model;
   }
 
@@ -136,7 +130,7 @@ class Database {
 
     let oldVersion = 0;
 
-    const getMetaCallBack = (data) => {
+    const getMetaCallBack = data => {
       if (data.meta && data.meta.version) {
         oldVersion = data.meta.version;
       }
@@ -148,21 +142,19 @@ class Database {
     parseStream.once('header', getMetaCallBack);
     parseStream.once('footer', getMetaCallBack);
 
-    parseStream.on('data', (data) => {
+    parseStream.on('data', data => {
       this.model(data.key)._import(data.value);
     });
 
-    const rs = fs.createReadStream(path, 'utf8');
+    const rs = createReadStream(path, 'utf8');
 
-    return pipelineAsync(rs, parseStream)
-      .then(() => {
-        if (newVersion > oldVersion) {
-          return onUpgrade(oldVersion, newVersion);
-        } else if (newVersion < oldVersion) {
-          return onDowngrade(oldVersion, newVersion);
-        }
-      })
-      .asCallback(callback);
+    return pipelineAsync(rs, parseStream).then(() => {
+      if (newVersion > oldVersion) {
+        return onUpgrade(oldVersion, newVersion);
+      } else if (newVersion < oldVersion) {
+        return onDowngrade(oldVersion, newVersion);
+      }
+    }).asCallback(callback);
   }
 
   /**
@@ -178,37 +170,30 @@ class Database {
     return BluebirdPromise.resolve(exportAsync(this, path)).asCallback(callback);
   }
 
-  toJSON(): { meta: { version: number; warehouse: string }; models: Record<string, Model<any>> } {
-    const models = Object.keys(this._models).reduce((obj, key) => {
-      const value = this._models[key];
-      if (value != null) obj[key] = value;
-      return obj;
-    }, {});
+  toJSON(): { meta: { version: number, warehouse: string }, models: Record<string, Model<any>> } {
+    const models = Object.keys(this._models)
+      .reduce((obj, key) => {
+        const value = this._models[key];
+        if (value != null) obj[key] = value;
+        return obj;
+      }, {});
 
     return {
       meta: {
         version: this.options.version,
-        warehouse: __WAREHOUSE_VERSION__
-      },
-      models
+        warehouse: pkg.version
+      }, models
     };
   }
   static Schema = Schema;
   Schema: typeof Schema;
   static SchemaType = SchemaType;
   SchemaType: typeof SchemaType;
-  static version: string;
+  static version: number;
 }
 
 Database.prototype.Schema = Schema;
 Database.prototype.SchemaType = SchemaType;
-Database.version = __WAREHOUSE_VERSION__;
+Database.version = pkg.version;
 
-// For ESM compatibility
 export default Database;
-if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
-  // For CommonJS compatibility
-  module.exports = Database;
-  // For ESM compatibility
-  module.exports.default = Database;
-}

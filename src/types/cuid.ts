@@ -1,6 +1,6 @@
-import SchemaType from '../schematype.js';
+import SchemaType from '../schematype';
 import { nanoid } from 'nanoid';
-import ValidationError from '../error/validation.js';
+import ValidationError from '../error/validation';
 
 /**
  * [CUID](https://github.com/ai/nanoid) schema type.
@@ -37,12 +37,4 @@ class SchemaTypeCUID extends SchemaType<string> {
   }
 }
 
-
-// For ESM compatibility
 export default SchemaTypeCUID;
-if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
-  // For CommonJS compatibility
-  module.exports = SchemaTypeCUID;
-  // For ESM compatibility
-  module.exports.default = SchemaTypeCUID;
-}

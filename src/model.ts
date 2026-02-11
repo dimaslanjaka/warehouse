@@ -2,16 +2,16 @@ import { EventEmitter } from 'events';
 import rfdc from 'rfdc';
 const cloneDeep = rfdc();
 import BluebirdPromise from 'bluebird';
-import { parseArgs, getProp, setGetter, shuffle, asyncWriteToStream } from './util.js';
-import Document from './document.js';
-import Query from './query.js';
-import Schema from './schema.js';
-import * as Types from './types/index.js';
-import WarehouseError from './error.js';
-import PopulationError from './error/population.js';
-import Mutex from './mutex.js';
-import type Database from './database.js';
-import type { AddSchemaTypeOptions, NodeJSLikeCallback, Options, queryCallback } from './types.js';
+import { parseArgs, getProp, setGetter, shuffle, asyncWriteToStream } from './util';
+import Document from './document';
+import Query from './query';
+import Schema from './schema';
+import * as Types from './types/index';
+import WarehouseError from './error';
+import PopulationError from './error/population';
+import Mutex from './mutex';
+import type Database from './database';
+import type { AddSchemaTypeOptions, NodeJSLikeCallback, Options, queryCallback } from './types';
 import type { Writable } from 'node:stream';
 
 class Model<T> extends EventEmitter {
@@ -49,7 +49,7 @@ class Model<T> extends EventEmitter {
 
     // Set `_id` path for schema
     if (!schema.path('_id')) {
-      schema.path('_id', { type: Types.CUID, required: true });
+      schema.path('_id', {type: Types.CUID, required: true});
     }
 
     this.schema = schema;
@@ -59,19 +59,7 @@ class Model<T> extends EventEmitter {
       _schema!: Schema<T>;
       constructor(data: T) {
         super(data);
-        // Ensure _model and _schema are set on the instance (not in base class)
-        Object.defineProperty(this, '_model', {
-          value: _Document.prototype._model,
-          writable: true,
-          configurable: true,
-          enumerable: false,
-        });
-        Object.defineProperty(this, '_schema', {
-          value: _Document.prototype._schema,
-          writable: true,
-          configurable: true,
-          enumerable: false,
-        });
+
         // Apply getters
         schema._applyGetters(this);
       }
@@ -113,8 +101,8 @@ class Model<T> extends EventEmitter {
   /**
    * Creates a new document.
    *
-   * @param data
-   * @return
+   * @param {object} data
+   * @return {Document}
    */
   new(data?: T): Document<T> {
     return new this.Document(data);
@@ -123,10 +111,10 @@ class Model<T> extends EventEmitter {
   /**
    * Finds a document by its identifier.
    *
-   * @param id
-   * @param options
-   *   @param {boolean} [options.lean=false] false = Returns a plain JavaScript object
-   * @return
+   * @param {*} id
+   * @param {object} options
+   *   @param {boolean} [options.lean=false] Returns a plain JavaScript object
+   * @return {Document|object}
    */
   findById(id: PropertyKey): Document<T>;
   findById(id: PropertyKey, options_: Partial<Omit<Options, 'lean'>> & { lean: true }): T;
@@ -137,12 +125,9 @@ class Model<T> extends EventEmitter {
     const raw = this.data[id];
     if (!raw) return;
 
-    const options = Object.assign(
-      {
-        lean: false
-      },
-      options_
-    );
+    const options = Object.assign({
+      lean: false
+    }, options_);
 
     const data = cloneDeep(raw);
     return options.lean ? data : this.new(data);
@@ -151,8 +136,8 @@ class Model<T> extends EventEmitter {
   /**
    * Checks if the model contains a document with the specified id.
    *
-   * @param id
-   * @return
+   * @param {*} id
+   * @return {boolean}
    */
   has(id: PropertyKey): boolean {
     return Boolean(this.data[id]);
@@ -177,7 +162,7 @@ class Model<T> extends EventEmitter {
   /**
    * Inserts a document.
    *
-   * @param {Document|object} data_
+   * @param {Document|object} data
    * @return {BluebirdPromise}
    * @private
    */
@@ -227,7 +212,7 @@ class Model<T> extends EventEmitter {
   /**
    * Inserts documents.
    *
-   * @param {object|Array<any>} data
+   * @param {object|array} data
    * @param {function} [callback]
    * @return {BluebirdPromise}
    */
@@ -334,7 +319,7 @@ class Model<T> extends EventEmitter {
    * Finds a document by its identifier and replace it.
    *
    * @param {*} id
-   * @param  {object} data_
+   * @param  {object} data
    * @return {BluebirdPromise}
    * @private
    */
@@ -535,11 +520,7 @@ class Model<T> extends EventEmitter {
       }
     }
 
-    if (options.lean) return arr as T[];
-    const queryInstance = new this.Query(arr as Document<T>[]);
-    queryInstance._model = this;
-    queryInstance._schema = this.schema;
-    return queryInstance;
+    return options.lean ? arr as T[] : new this.Query(arr as Document<T>[]);
   }
 
   /**
@@ -917,50 +898,34 @@ class Model<T> extends EventEmitter {
     return () => {
       if (!hasCache) {
         let arr: Document<T>[] = [];
-        // If no match or sort, apply skip/limit to data array before mapping
-        if (!options.match && !options.sort && (options.skip || options.limit)) {
-          let start = options.skip || 0;
-          let end = options.limit ? start + options.limit : undefined;
-          const sliced = data.slice(start, end);
-          for (let i = 0, len = sliced.length; i < len; i++) {
-            arr.push(model.findById(sliced[i]));
-          }
-        } else {
-          // Default: map all, then apply match/sort/skip/limit as before
-          for (let i = 0, len = data.length; i < len; i++) {
-            arr.push(model.findById(data[i]));
-          }
+
+        for (let i = 0, len = data.length; i < len; i++) {
+          arr.push(model.findById(data[i]));
         }
 
-        // Create Query and set _model/_schema
-        let query = new Query(arr);
-        query._model = model;
-        query._schema = model.schema;
-
-        // Only apply match/sort/skip/limit if match or sort is present
-        if (options.match || options.sort) {
-          // 1. match
-          if (options.match) {
-            const { skip, limit, ...findOptions } = options;
-            query = query.find(options.match, { ...findOptions, lean: false });
-          }
-          // 2. sort
-          if (options.sort) {
-            query = query.sort(options.sort);
-          }
-          // 3. skip
-          if (options.skip) {
-            query = query.skip(options.skip);
-          }
-          // 4. limit
+        if (options.match) {
+          cache = new Query(arr).find(options.match, options);
+        } else if (options.skip) {
           if (options.limit) {
-            query = query.limit(options.limit);
+            arr = arr.slice(options.skip, options.skip + options.limit);
+          } else {
+            arr = arr.slice(options.skip);
           }
+
+          cache = new Query(arr);
+        } else if (options.limit) {
+          cache = new Query(arr.slice(0, options.limit));
+        } else {
+          cache = new Query(arr);
         }
 
-        cache = query;
+        if (options.sort) {
+          cache = cache.sort(options.sort);
+        }
+
         hasCache = true;
       }
+
       return cache;
     };
   }
@@ -1101,12 +1066,4 @@ Model.prototype.each = Model.prototype.forEach;
 
 Model.prototype.random = Model.prototype.shuffle;
 
-
-// For ESM compatibility
 export default Model;
-if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
-  // For CommonJS compatibility
-  module.exports = Model;
-  // For ESM compatibility
-  module.exports.default = Model;
-}

@@ -1,12 +1,12 @@
-import SchemaType from '../schematype.js';
-import ValidationError from '../error/validation.js';
+import SchemaType from '../schematype';
+import ValidationError from '../error/validation';
 type WithImplicitCoercion<T> = T | { valueOf(): T };
 
 /**
  * Boolean schema type.
  */
 class SchemaTypeBuffer extends SchemaType<Buffer> {
-  declare options: SchemaType<Buffer>['options'] & { encoding: BufferEncoding; };
+  declare options: SchemaType<Buffer>['options'] & { encoding: BufferEncoding };
 
   /**
    * @param {string} name
@@ -15,10 +15,16 @@ class SchemaTypeBuffer extends SchemaType<Buffer> {
    *   @param {boolean|Function} [options.default]
    *   @param {string} [options.encoding=hex]
    */
-  constructor(name: string, options?: Partial<SchemaType<Buffer>['options']> & { encoding?: BufferEncoding; }) {
-    super(name, Object.assign({
-      encoding: 'hex'
-    }, options));
+  constructor(name: string, options?: Partial<SchemaType<Buffer>['options']> & { encoding?: BufferEncoding }) {
+    super(
+      name,
+      Object.assign(
+        {
+          encoding: 'hex'
+        },
+        options
+      )
+    );
   }
 
   /**
@@ -108,12 +114,4 @@ class SchemaTypeBuffer extends SchemaType<Buffer> {
   }
 }
 
-
-// For ESM compatibility
 export default SchemaTypeBuffer;
-if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
-  // For CommonJS compatibility
-  module.exports = SchemaTypeBuffer;
-  // For ESM compatibility
-  module.exports.default = SchemaTypeBuffer;
-}

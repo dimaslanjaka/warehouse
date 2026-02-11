@@ -1,5 +1,5 @@
-import { setProp } from './util.js';
-import ValidationError from './error/validation.js';
+import { setProp } from './util';
+import ValidationError from './error/validation';
 
 /**
  * This is the basic schema type.
@@ -45,7 +45,7 @@ import ValidationError from './error/validation.js';
  * The return value will replace the original data.
  */
 class SchemaType<T> {
-  options: { required: boolean; default?: (() => T) | T; };
+  options: { required: boolean; default?: (() => T) | T };
   default: () => T;
 
   /**
@@ -56,10 +56,16 @@ class SchemaType<T> {
    *   @param {Boolean} [options.required=false]
    *   @param {*} [options.default]
    */
-  constructor(public name: string = '', options?: { required?: boolean; default?: (() => T) | T; }) {
-    this.options = Object.assign({
-      required: false
-    }, options);
+  constructor(
+    public name: string = '',
+    options?: { required?: boolean; default?: (() => T) | T }
+  ) {
+    this.options = Object.assign(
+      {
+        required: false
+      },
+      options
+    );
 
     const default_ = this.options.default;
 
@@ -268,7 +274,9 @@ class SchemaType<T> {
    * @param {Object} data
    * @return {*}
    */
-  u$unset<T>(value: T, update: boolean, _data?: unknown): T | undefined { return update ? undefined : value; }
+  u$unset<T>(value: T, update: boolean, _data?: unknown): T | undefined {
+    return update ? undefined : value;
+  }
 
   /**
    * Renames a field.
@@ -294,12 +302,4 @@ SchemaType.prototype.q$max = SchemaType.prototype.q$lte;
 
 SchemaType.prototype.q$min = SchemaType.prototype.q$gte;
 
-
-// For ESM compatibility
 export default SchemaType;
-if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
-  // For CommonJS compatibility
-  module.exports = SchemaType;
-  // For ESM compatibility
-  module.exports.default = SchemaType;
-}

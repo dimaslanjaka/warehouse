@@ -1,4 +1,4 @@
-import WarehouseError from '../error.js';
+import WarehouseError from '../error';
 
 class ValidationError extends WarehouseError {}
 

@@ -1,15 +1,15 @@
-import SchemaType from '../schematype.js';
-import SchemaTypeString from './string.js';
-import SchemaTypeNumber from './number.js';
-import SchemaTypeBoolean from './boolean.js';
-import SchemaTypeArray from './array.js';
-import SchemaTypeObject from './object.js';
-import SchemaTypeDate from './date.js';
-import SchemaTypeVirtual from './virtual.js';
-import SchemaTypeCUID from './cuid.js';
-import SchemaTypeEnum from './enum.js';
-import SchemaTypeInteger from './integer.js';
-import SchemaTypeBuffer from './buffer.js';
+import SchemaType from '../schematype';
+import SchemaTypeString from './string';
+import SchemaTypeNumber from './number';
+import SchemaTypeBoolean from './boolean';
+import SchemaTypeArray from './array';
+import SchemaTypeObject from './object';
+import SchemaTypeDate from './date';
+import SchemaTypeVirtual from './virtual';
+import SchemaTypeCUID from './cuid';
+import SchemaTypeEnum from './enum';
+import SchemaTypeInteger from './integer';
+import SchemaTypeBuffer from './buffer';
 
 export {
   SchemaType as Mixed,

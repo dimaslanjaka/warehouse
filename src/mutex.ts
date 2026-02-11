@@ -29,12 +29,4 @@ class Mutex {
   }
 }
 
-
-// For ESM compatibility
 export default Mutex;
-if (typeof module !== 'undefined' && typeof module.exports === 'object' && module.exports !== null) {
-  // For CommonJS compatibility
-  module.exports = Mutex;
-  // For ESM compatibility
-  module.exports.default = Mutex;
-}
