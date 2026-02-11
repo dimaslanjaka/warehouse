@@ -1,16 +1,14 @@
 {
-  // TypeScript configuration for IDE and mocha support only. Not used for build.
-  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "module": "es2020",
-    "target": "ES2022",
+    "outDir": "./dist",
+    "module": "preserve",
+    "target": "es6",
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
+    "sourceMap": true,
+    "declaration": true,
     "esModuleInterop": true,
-    "types": ["node", "mocha"],
-    "outDir": "dist"
+    "types": ["node", "mocha"]
   },
   "include": ["./src/**/*"],
-  "exclude": ["node_modules", "tmp", "dist", "coverage"]
+  "exclude": ["node_modules"]
 }

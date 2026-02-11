@@ -63,7 +63,7 @@ function buildTsup() {
     // skipNodeModulesBundle: true,
     external: externalDeps,
     format: ['esm', 'cjs'],
-    dts: true,
+    dts: false,
     outDir: 'dist',
     outExtension({ format }) {
       switch (format) {
