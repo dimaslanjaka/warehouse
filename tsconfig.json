@@ -1,20 +1,14 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "module": "commonjs",
+    "module": "preserve",
     "target": "es6",
+    "moduleResolution": "bundler",
     "sourceMap": true,
     "declaration": true,
     "esModuleInterop": true,
-    "types": [
-      "node",
-      "mocha"
-    ]
+    "types": ["node", "mocha"]
   },
-  "include": [
-    "./src/**/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules"]
 }
