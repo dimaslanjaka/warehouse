@@ -1,6 +1,6 @@
 import { parse as createJsonParseStream } from './lib/jsonstream';
 import BluebirdPromise from 'bluebird';
-import { createReadStream, createWriteStream } from 'graceful-fs';
+import fs from 'graceful-fs';
 import { pipeline, Stream } from 'stream';
 import Model from './model';
 import Schema from './schema';
@@ -15,15 +15,18 @@ const pkg = require('../package.json');
 const pipelineAsync = BluebirdPromise.promisify(pipeline) as unknown as (...args: Stream[]) => BluebirdPromise<unknown>;
 
 async function exportAsync(database: Database, path: string): Promise<void> {
-  const writeStream = createWriteStream(path, { flags: 'w' });
+  const writeStream = fs.createWriteStream(path, { flags: 'w' });
 
   try {
     let p: Promise<unknown> | undefined;
     // Start body & Meta & Start models
-    p = asyncWriteToStream(writeStream, `{"meta":${JSON.stringify({
-      version: database.options.version,
-      warehouse: pkg.version
-    })},"models":{`);
+    p = asyncWriteToStream(
+      writeStream,
+      `{"meta":${JSON.stringify({
+        version: database.options.version,
+        warehouse: pkg.version
+      })},"models":{`
+    );
     if (p) await p;
 
     const models = database._models;
@@ -61,10 +64,10 @@ async function exportAsync(database: Database, path: string): Promise<void> {
 }
 
 interface DatabaseOptions {
-  version: number,
-  path: string,
-  onUpgrade: (oldVersion: number, newVersion: number) => any,
-  onDowngrade: (oldVersion: number, newVersion: number) => any
+  version: number;
+  path: string;
+  onUpgrade: (oldVersion: number, newVersion: number) => any;
+  onDowngrade: (oldVersion: number, newVersion: number) => any;
 }
 
 class Database {
@@ -130,7 +133,7 @@ class Database {
 
     let oldVersion = 0;
 
-    const getMetaCallBack = data => {
+    const getMetaCallBack = (data) => {
       if (data.meta && data.meta.version) {
         oldVersion = data.meta.version;
       }
@@ -142,19 +145,21 @@ class Database {
     parseStream.once('header', getMetaCallBack);
     parseStream.once('footer', getMetaCallBack);
 
-    parseStream.on('data', data => {
+    parseStream.on('data', (data) => {
       this.model(data.key)._import(data.value);
     });
 
-    const rs = createReadStream(path, 'utf8');
+    const rs = fs.createReadStream(path, 'utf8');
 
-    return pipelineAsync(rs, parseStream).then(() => {
-      if (newVersion > oldVersion) {
-        return onUpgrade(oldVersion, newVersion);
-      } else if (newVersion < oldVersion) {
-        return onDowngrade(oldVersion, newVersion);
-      }
-    }).asCallback(callback);
+    return pipelineAsync(rs, parseStream)
+      .then(() => {
+        if (newVersion > oldVersion) {
+          return onUpgrade(oldVersion, newVersion);
+        } else if (newVersion < oldVersion) {
+          return onDowngrade(oldVersion, newVersion);
+        }
+      })
+      .asCallback(callback);
   }
 
   /**
@@ -170,19 +175,19 @@ class Database {
     return BluebirdPromise.resolve(exportAsync(this, path)).asCallback(callback);
   }
 
-  toJSON(): { meta: { version: number, warehouse: string }, models: Record<string, Model<any>> } {
-    const models = Object.keys(this._models)
-      .reduce((obj, key) => {
-        const value = this._models[key];
-        if (value != null) obj[key] = value;
-        return obj;
-      }, {});
+  toJSON(): { meta: { version: number; warehouse: string }; models: Record<string, Model<any>> } {
+    const models = Object.keys(this._models).reduce((obj, key) => {
+      const value = this._models[key];
+      if (value != null) obj[key] = value;
+      return obj;
+    }, {});
 
     return {
       meta: {
         version: this.options.version,
         warehouse: pkg.version
-      }, models
+      },
+      models
     };
   }
   static Schema = Schema;
