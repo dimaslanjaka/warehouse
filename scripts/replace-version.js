@@ -16,21 +16,38 @@ const pkgJson = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json
 const version = pkgJson.version;
 const placeholder = '__WAREHOUSE_VERSION_UNIQUE_2A1B3C4D5E6F__';
 
-const targets = [path.join(__dirname, '../dist/cjs/database.js'), path.join(__dirname, '../dist/esm/database.js')];
+// Recursively search the `dist` folder for files containing the placeholder
+const distDir = path.join(__dirname, '../dist');
+if (!fs.existsSync(distDir)) {
+  console.warn(`Dist folder not found: ${distDir}`);
+} else {
+  const filesToCheck = [];
+  const walk = (dir) => {
+    for (const name of fs.readdirSync(dir)) {
+      const full = path.join(dir, name);
+      const stat = fs.statSync(full);
+      if (stat.isDirectory()) {
+        walk(full);
+      } else {
+        filesToCheck.push(full);
+      }
+    }
+  };
+  walk(distDir);
 
-for (const file of targets) {
-  if (!fs.existsSync(file)) {
-    console.warn(`File not found: ${file}`);
-    continue;
+  for (const file of filesToCheck) {
+    try {
+      const content = fs.readFileSync(file, 'utf8');
+      if (!content.includes(placeholder)) {
+        continue;
+      }
+      const replaced = content.replace(new RegExp(placeholder, 'g'), version);
+      fs.writeFileSync(file, replaced, 'utf8');
+      console.log(`Replaced version in: ${file}`);
+    } catch (err) {
+      console.error(`Failed to process ${file}:`, err);
+    }
   }
-  const content = fs.readFileSync(file, 'utf8');
-  if (!content.includes(placeholder)) {
-    console.warn(`Placeholder not found in: ${file}`);
-    continue;
-  }
-  const replaced = content.replace(new RegExp(placeholder, 'g'), version);
-  fs.writeFileSync(file, replaced, 'utf8');
-  console.log(`Replaced version in: ${file}`);
 }
 
 // Also update placeholder in test/fixtures/db.json if present (literal string replacement)
