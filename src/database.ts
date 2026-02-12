@@ -11,7 +11,6 @@ import type { AddSchemaTypeOptions, NodeJSLikeCallback } from './types';
 import { asyncWriteToStream } from './util';
 
 const log = logger();
-const pkg = require('../package.json');
 const pipelineAsync = BluebirdPromise.promisify(pipeline) as unknown as (...args: Stream[]) => BluebirdPromise<unknown>;
 
 async function exportAsync(database: Database, path: string): Promise<void> {
@@ -24,7 +23,7 @@ async function exportAsync(database: Database, path: string): Promise<void> {
       writeStream,
       `{"meta":${JSON.stringify({
         version: database.options.version,
-        warehouse: pkg.version
+        warehouse: '__WAREHOUSE_VERSION_UNIQUE_2A1B3C4D5E6F__'
       })},"models":{`
     );
     if (p) await p;
@@ -185,7 +184,7 @@ class Database {
     return {
       meta: {
         version: this.options.version,
-        warehouse: pkg.version
+        warehouse: '__WAREHOUSE_VERSION_UNIQUE_2A1B3C4D5E6F__'
       },
       models
     };
@@ -194,11 +193,11 @@ class Database {
   Schema: typeof Schema;
   static SchemaType = SchemaType;
   SchemaType: typeof SchemaType;
-  static version: number;
+  static version: number | string;
 }
 
 Database.prototype.Schema = Schema;
 Database.prototype.SchemaType = SchemaType;
-Database.version = pkg.version;
+Database.version = '__WAREHOUSE_VERSION_UNIQUE_2A1B3C4D5E6F__';
 
 export default Database;
