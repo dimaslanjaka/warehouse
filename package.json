@@ -16,7 +16,7 @@
     "prepublishOnly": "npm install && npm run clean && npm run build",
     "build-tsc": "tsc -b",
     "clean-tsc": "tsc -b --clean",
-    "build-dts": "tsc --emitDeclarationOnly --declaration --outDir dist",
+    "build-dts": "tsc --emitDeclarationOnly --declaration --outDir dist && node scripts/populate-declaration.mjs",
     "build-tsup": "node build.js",
     "build": "npm run build-tsup && npm run build-dts && node scripts/replace-version.js",
     "clean": "npx -y rimraf dist",
