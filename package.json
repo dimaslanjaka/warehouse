@@ -37,7 +37,6 @@
   "dependencies": {
     "bluebird": "^3.7.2",
     "graceful-fs": "^4.2.10",
-    "hexo-log": "workspace:^",
     "is-plain-object": "^5.0.0",
     "jsonparse": "^1.3.1",
     "nanoid": "^3.3.7",
@@ -72,6 +71,11 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "resolutions": {
+    "binary-collections": "https://github.com/dimaslanjaka/bin/raw/c2b5937/releases/bin.tgz",
+    "@dimaslanjaka/ai-toolkit": "https://github.com/dimaslanjaka/ai-toolkit/raw/refs/heads/master/release/ai-toolkit.tgz",
+    "got": "11.8.2"
   },
   "exports": {
     ".": {
