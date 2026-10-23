@@ -22,7 +22,8 @@
     "clean": "npx -y rimraf dist",
     "watch": "npx -y nodemon --delay 5 --watch build.js --watch src --ext js,ts --exec \"yarn build > build.log 2>&1 && yarn workspace hexo-site exec \\\"hexo generate --verbose --debug\\\"\"",
     "eslint": "eslint src test",
-    "test": "mocha --loader=ts-node/esm",
+    "test-old": "mocha --loader=ts-node/esm",
+    "test": "node --import=tsx --import=./scripts/resolve-ts.cjs ./node_modules/mocha/bin/mocha.js",
     "test-cov": "c8 --reporter=lcovonly --reporter=text-summary npm test",
     "typedoc": "typedoc --entryPointStrategy expand ./src",
     "pack": "npx -y tarball-packer --yarn --filename warehouse --normalize-resolutions"
@@ -65,6 +66,7 @@
     "sinon": "^19.0.2",
     "ts-node": "^10.9.1",
     "tsup": "^8.5.1",
+    "tsx": "^4.23.15",
     "typedoc": "^0.27.2",
     "typedoc-plugin-rename-defaults": "^0.7.0",
     "typescript": "^5.8.3"
