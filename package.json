@@ -24,7 +24,8 @@
     "eslint": "eslint src test",
     "test": "mocha --loader=ts-node/esm",
     "test-cov": "c8 --reporter=lcovonly --reporter=text-summary npm test",
-    "typedoc": "typedoc --entryPointStrategy expand ./src"
+    "typedoc": "typedoc --entryPointStrategy expand ./src",
+    "pack": "npx -y tarball-packer --yarn --filename warehouse --normalize-resolutions"
   },
   "repository": "hexojs/warehouse",
   "keywords": [
