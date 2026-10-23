@@ -190,7 +190,7 @@ class Model<T> extends EventEmitter {
     schema._applySetters(result);
 
     // Pre-hooks
-    return execHooks(schema, 'pre', 'save', data).then((data) => {
+    return execHooks(schema, 'pre', 'save', data).then(data => {
       // Insert data
       this.dirty = true;
       this.data[id] = result;
@@ -221,7 +221,7 @@ class Model<T> extends EventEmitter {
    */
   insert(data: Document<T> | T | Document<T>[] | T[], callback?: NodeJSLikeCallback<any>): BluebirdPromise<any> {
     if (Array.isArray(data)) {
-      return BluebirdPromise.mapSeries<Document<T> | T, any>(data, (item) => this.insertOne(item)).asCallback(callback);
+      return BluebirdPromise.mapSeries<Document<T> | T, any>(data, item => this.insertOne(item)).asCallback(callback);
     }
 
     return this.insertOne(data, callback);
@@ -281,7 +281,7 @@ class Model<T> extends EventEmitter {
     schema._applySetters(result as object);
 
     // Pre-hooks
-    return execHooks(schema, 'pre', 'save', doc).then((data) => {
+    return execHooks(schema, 'pre', 'save', doc).then(data => {
       // Update data
       this.dirty = true;
       this.data[id] = result;
@@ -343,7 +343,7 @@ class Model<T> extends EventEmitter {
     schema._applySetters(result);
 
     // Pre-hooks
-    return execHooks(schema, 'pre', 'save', data).then((data) => {
+    return execHooks(schema, 'pre', 'save', data).then(data => {
       // Replace data
       this.dirty = true;
       this.data[id] = result;
@@ -394,7 +394,7 @@ class Model<T> extends EventEmitter {
     }
 
     // Pre-hooks
-    return execHooks(schema, 'pre', 'remove', data).then((data) => {
+    return execHooks(schema, 'pre', 'remove', data).then(data => {
       // Remove data
       this.dirty = true;
       this.data[id] = null;
@@ -1110,7 +1110,7 @@ function execHooks<T>(
   const hooks = schema.hooks[type][event];
   if (!hooks.length) return BluebirdPromise.resolve(data);
 
-  return BluebirdPromise.each(hooks, (hook) => hook(data)).thenReturn(data);
+  return BluebirdPromise.each(hooks, hook => hook(data)).thenReturn(data);
 }
 
 Model.prototype.size = Model.prototype.count;

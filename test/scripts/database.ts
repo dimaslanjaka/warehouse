@@ -96,7 +96,7 @@ describe('Database', () => {
     db
       .save()
       .then(() => promisifyFs.readFileAsync(DB_PATH))
-      .then((data) => {
+      .then(data => {
         // TODO: fix
         // @ts-ignore
         const json = JSON.parse(data);

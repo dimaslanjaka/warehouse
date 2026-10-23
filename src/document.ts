@@ -40,7 +40,7 @@ abstract class Document<T> {
           protoModelValue: proto && (proto as any)._model,
           instanceModelValue: (this as any)._model,
           instanceModelHasSave: Boolean((this as any)._model && (this as any)._model.save),
-          instanceModelSaveType: typeof ((this as any)._model && (this as any)._model.save),
+          instanceModelSaveType: typeof((this as any)._model && (this as any)._model.save),
           instanceModelEqualsProto: proto && (proto as any)._model === (this as any)._model,
           protoKeys: proto ? Object.getOwnPropertyNames(proto).slice(0, 50) : [],
           instanceKeys: Object.keys(this).slice(0, 50)

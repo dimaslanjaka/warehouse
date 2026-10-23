@@ -132,7 +132,7 @@ class Database {
 
     let oldVersion = 0;
 
-    const getMetaCallBack = (data) => {
+    const getMetaCallBack = data => {
       if (data.meta && data.meta.version) {
         oldVersion = data.meta.version;
       }
@@ -144,7 +144,7 @@ class Database {
     parseStream.once('header', getMetaCallBack);
     parseStream.once('footer', getMetaCallBack);
 
-    parseStream.on('data', (data) => {
+    parseStream.on('data', data => {
       this.model(data.key)._import(data.value);
     });
 

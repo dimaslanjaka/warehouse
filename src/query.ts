@@ -394,7 +394,7 @@ abstract class Query<T> {
     const model = this._model;
     const stack = this._schema._parseUpdate(data);
 
-    return BluebirdPromise.mapSeries(this.data, (item) => model._updateWithStack(item._id, stack)).asCallback(callback);
+    return BluebirdPromise.mapSeries(this.data, item => model._updateWithStack(item._id, stack)).asCallback(callback);
   }
 
   /**
@@ -407,7 +407,7 @@ abstract class Query<T> {
   replace(data: Document<T> | T, callback?: NodeJSLikeCallback<any>): BluebirdPromise<any> {
     const model = this._model;
 
-    return BluebirdPromise.map(this.data, (item) => model.replaceById(item._id, data)).asCallback(callback);
+    return BluebirdPromise.map(this.data, item => model.replaceById(item._id, data)).asCallback(callback);
   }
 
   /**
@@ -419,7 +419,7 @@ abstract class Query<T> {
   remove(callback?: NodeJSLikeCallback<any>): BluebirdPromise<any> {
     const model = this._model;
 
-    return BluebirdPromise.mapSeries(this.data, (item) => model.removeById(item._id)).asCallback(callback);
+    return BluebirdPromise.mapSeries(this.data, item => model.removeById(item._id)).asCallback(callback);
   }
 
   /**

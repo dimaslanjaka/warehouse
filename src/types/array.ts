@@ -45,7 +45,7 @@ class SchemaTypeArray<I, T extends SchemaType<I>> extends SchemaType<I[]> {
     value_ = super.cast(value_, data);
     if (value_ == null) return value_ as undefined;
 
-    const value = isArray(value_) ? value_ : (value_ = [value_]);
+    const value = isArray(value_) ? value_ : value_ = [value_];
     if (!value.length) return value;
 
     const child = this.child;
@@ -305,10 +305,10 @@ class SchemaTypeArray<I, T extends SchemaType<I>> extends SchemaType<I[]> {
     if (!value) return value;
 
     if (isArray(update)) {
-      return value.filter((item) => !update.includes(item));
+      return value.filter(item => !update.includes(item));
     }
 
-    return value.filter((item) => item !== update);
+    return value.filter(item => item !== update);
   }
 
   /**
