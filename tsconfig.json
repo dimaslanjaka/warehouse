@@ -8,6 +8,9 @@
     "strict": false,
     "sourceMap": true,
     "declaration": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "types": ["node", "mocha"]
   },
