@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
+    "rootDir": ".",
     "module": "preserve",
     "target": "es6",
     "moduleResolution": "bundler",
+    "strict": false,
     "sourceMap": true,
     "declaration": true,
     "esModuleInterop": true,
