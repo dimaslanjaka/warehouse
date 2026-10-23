@@ -73,8 +73,7 @@
     "node": ">=18"
   },
   "resolutions": {
-    "binary-collections": "https://github.com/dimaslanjaka/bin/raw/c2b5937/releases/bin.tgz",
-    "@dimaslanjaka/ai-toolkit": "https://github.com/dimaslanjaka/ai-toolkit/raw/refs/heads/master/release/ai-toolkit.tgz",
+    "binary-collections": "https://github.com/dimaslanjaka/bin/raw/df4c213/releases/bin.tgz",
     "got": "11.8.2"
   },
   "exports": {
