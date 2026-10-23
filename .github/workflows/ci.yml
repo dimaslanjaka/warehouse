@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "master"
+      - "monorepo"
   pull_request:
 
 jobs:
@@ -11,17 +12,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 22
+      - name: Use Node.js 24
         uses: actions/setup-node@v3
         with:
-          node-version: 22
+          node-version: 24
       - name: Cache NPM dependencies
         uses: actions/cache@v3
         with:
-          path: node_modules
+          path: |
+            node_modules
+            yarn.lock
           key: ${{ runner.OS }}-npm-cache
           restore-keys: ${{ runner.OS }}-npm-cache
-      - run: npm install
+      - run: touch yarn.lock && yarn install
       - run: npm run eslint
         env:
           CI: true
@@ -30,7 +33,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [18, 20, 22]
+        node-version: [24, 26]
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
@@ -41,11 +44,13 @@ jobs:
       - name: Cache NPM dependencies
         uses: actions/cache@v3
         with:
-          path: node_modules
+          path: |
+            node_modules
+            yarn.lock
           key: ${{ runner.os }}-npm-cache
           restore-keys: ${{ runner.os }}-npm-cache
       - name: Install Dependencies
-        run: npm install
+        run: touch yarn.lock && yarn install
       - name: Test
         run: npm run test-cov
         env:
