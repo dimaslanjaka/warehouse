@@ -13,6 +13,7 @@ module.exports = [
       'no-use-before-define': 0,
       'n/no-missing-require': 0,
       'n/no-missing-import': 0,
+      'n/no-extraneous-import': 0,
       '@typescript-eslint/no-unused-vars': [
         'error', {
           'argsIgnorePattern': '^_'
