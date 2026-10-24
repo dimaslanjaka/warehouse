@@ -55,13 +55,19 @@ class SchemaTypeMoment extends SchemaType<moment.Moment> {
     return false;
   }
 
-  compare(a?, b?) {
-    if (a) {
-      if (b) return a - b;
+  compare(a?: number | moment.Moment, b?: number | moment.Moment) {
+    if (a != null) {
+      if (b != null) {
+        const left = typeof a === 'number' ? a : a.valueOf();
+        const right = typeof b === 'number' ? b : b.valueOf();
+
+        return left - right;
+      }
+
       return 1;
     }
 
-    if (b) return -1;
+    if (b != null) return -1;
     return 0;
   }
 
@@ -76,14 +82,14 @@ class SchemaTypeMoment extends SchemaType<moment.Moment> {
     if (typeof value.toISOString === 'function') {
       try {
         return value.toISOString();
-      } catch {}
+      } catch { }
     }
     // Fallback for legacy moment objects
     const raw = (value as any)._d;
     if (raw && typeof raw.toISOString === 'function') {
       try {
         return raw.toISOString();
-      } catch {}
+      } catch { }
     }
     return undefined;
   }
@@ -145,7 +151,7 @@ describe('SchemaTypeMoment', () => {
   });
 
   it('cast() - default', () => {
-    const type = new SchemaTypeMoment('test', {default: moment});
+    const type = new SchemaTypeMoment('test', { default: moment });
     moment.isMoment(type.cast()).should.be.true;
   });
 
@@ -162,7 +168,7 @@ describe('SchemaTypeMoment', () => {
   });
 
   it('validate() - required', () => {
-    const type = new SchemaTypeMoment('test', {required: true});
+    const type = new SchemaTypeMoment('test', { required: true });
     // @ts-expect-error
     should.throw(() => type.validate(), '`test` is required!');
   });
