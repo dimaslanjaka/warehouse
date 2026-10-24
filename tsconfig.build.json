@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": ".",
+    "module": "preserve",
+    "target": "es6",
+    "moduleResolution": "bundler",
+    "strict": false,
+    "sourceMap": true,
+    "declaration": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "types": ["node", "mocha"]
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules"]
+}
