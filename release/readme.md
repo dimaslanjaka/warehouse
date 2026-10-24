@@ -2,7 +2,7 @@
 ## Releases
 | version | tarball url |
 | :--- | :--- |
-| latest | https://github.com/dimaslanjaka/warehouse/raw/a70587c/release/warehouse.tgz |
+| latest | https://github.com/dimaslanjaka/warehouse/raw/eef234b/release/warehouse.tgz |
 | latest | https://github.com/dimaslanjaka/warehouse/raw/monorepo/release/warehouse.tgz |
 
 use this tarball with `resolutions`:
