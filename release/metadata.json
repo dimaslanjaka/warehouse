@@ -1,11 +1,11 @@
 {
   "/release/warehouse.tgz": {
     "integrity": {
-      "sha1": "8df8e137c5cf91a9cf0cee6d3d2002030535e2c1",
-      "sha256": "sauqQO7LTvx1QvFaBBKLKVF1eSBmGucYFAOAc6JHg9g=",
-      "md5": "d429285d731057fbd703508899fb83e2",
-      "sha512": "YuNBQBzOeiAiUXERrgWqBN6Ila7PJbD2HKsCpSyhQjcDO+SB0YsqhAEmCo/Jb1VRYfv/Uf6RdHOG7QsZ+geaag=="
+      "sha1": "5a6a80905e8d5b19efa1bcd8a1140e2fa8785140",
+      "sha256": "+mhDSsFXY/rBcBZQ/OyyXhGDu6lYx2JK9aUFUHT/+Uk=",
+      "md5": "616018b0bc0e97648dff57123be667c7",
+      "sha512": "tu5tI9jFDf8kvy8GlfkCIbed9bms70EaHkr+ou1aiVf+QFtGFrhvl0rly8m4SkEtxuOlSre4ES3U2xmYWayb7A=="
     },
-    "size": "122.11 KB"
+    "size": "122.16 KB"
   }
 }
