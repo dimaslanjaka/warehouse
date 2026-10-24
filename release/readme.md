@@ -2,6 +2,8 @@
 ## Releases
 | version | tarball url |
 | :--- | :--- |
+| latest | https://github.com/dimaslanjaka/warehouse/raw/975fd76/release/warehouse.tgz |
+| latest | https://github.com/dimaslanjaka/warehouse/raw/monorepo/release/warehouse.tgz |
 
 use this tarball with `resolutions`:
 ```json
